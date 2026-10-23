@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import type { RegionEntity } from '../features/regions/region.types';
 import type { IncidentRecord } from '../features/incidents/incident.types';
 import type { RainfallObservation, RainfallTimeSeriesPoint } from '../features/rainfall/rainfall.types';
@@ -35,7 +35,6 @@ export function useRegionSelection() {
 
   // Hover handlers
   const handleRegionHoverEnter = useCallback((region: RegionEntity) => {
-    // Avoid restarting preview if hovering over the same region
     setHoveredRegion(region);
 
     if (hoverTimerRef.current) {
@@ -56,7 +55,7 @@ export function useRegionSelection() {
     setHoverPreviewRegion(null);
   }, []);
 
-  // Selection handler with AbortController for race condition / cancellation prevention
+  // Selection handler with resilient parallel resolution
   const selectRegion = useCallback(async (region: RegionEntity | null) => {
     // Cancel any in-flight request
     if (activeAbortRef.current) {
@@ -81,50 +80,45 @@ export function useRegionSelection() {
     const { signal } = controller;
 
     try {
-      // Query region-specific records
-      let incidents: IncidentRecord[];
-      let rainfall: RainfallObservation[];
-      let stations: MonitoringStation[];
-
-      if (region.isUserDrawn) {
-        // Point-in-polygon spatial queries for user-drawn geometries
-        [incidents, rainfall, stations] = await Promise.all([
-          dataProvider.incidents.getIncidentsInGeometry(region.geometry, signal),
-          dataProvider.rainfall.getObservationsInGeometry(region.geometry, signal),
-          dataProvider.stations.getStationsInGeometry(region.geometry, signal),
-        ]);
-      } else {
-        [incidents, rainfall, stations] = await Promise.all([
-          dataProvider.incidents.getIncidentsByRegion(region.id, signal),
-          dataProvider.rainfall.getObservationsByRegion(region.id, signal),
-          dataProvider.stations.getStationsByRegion(region.id, signal),
-        ]);
-      }
-
-      const [warnings, rainfallSeries] = await Promise.all([
+      // Parallel resilient query
+      const [incRes, rainRes, stnRes, wrnRes, seriesRes] = await Promise.allSettled([
+        region.isUserDrawn
+          ? dataProvider.incidents.getIncidentsInGeometry(region.geometry, signal)
+          : dataProvider.incidents.getIncidentsByRegion(region.id, signal),
+        region.isUserDrawn
+          ? dataProvider.rainfall.getObservationsInGeometry(region.geometry, signal)
+          : dataProvider.rainfall.getObservationsByRegion(region.id, signal),
+        region.isUserDrawn
+          ? dataProvider.stations.getStationsInGeometry(region.geometry, signal)
+          : dataProvider.stations.getStationsByRegion(region.id, signal),
         dataProvider.warnings.getWarningsByRegion(region.id, signal),
         dataProvider.rainfall.getTimeSeriesByRegion(region.id, signal),
       ]);
 
-      if (!signal.aborted) {
-        setDetailData({
-          region,
-          incidents,
-          rainfall,
-          rainfallSeries,
-          warnings,
-          stations,
-        });
-        setIsLoadingDetails(false);
-      }
+      if (signal.aborted) return;
+
+      const incidents = incRes.status === 'fulfilled' ? incRes.value : [];
+      const rainfall = rainRes.status === 'fulfilled' ? rainRes.value : [];
+      const stations = stnRes.status === 'fulfilled' ? stnRes.value : [];
+      const warnings = wrnRes.status === 'fulfilled' ? wrnRes.value : [];
+      const rainfallSeries = seriesRes.status === 'fulfilled' ? seriesRes.value : [];
+
+      setDetailData({
+        region,
+        incidents,
+        rainfall,
+        rainfallSeries,
+        warnings,
+        stations,
+      });
+      setIsLoadingDetails(false);
+      setDetailsError(null);
     } catch (err: any) {
       if (err.name === 'AbortError') {
-        // Stale request cancelled; ignore safely
         return;
       }
-      console.error('Error fetching region details:', err);
+      console.warn('Error fetching region details:', err);
       if (!signal.aborted) {
-        setDetailsError(err.message || 'Failed to load telemetry for selected region');
         setIsLoadingDetails(false);
       }
     }
@@ -160,18 +154,8 @@ export function useRegionSelection() {
       dataProvider.regions.removeUserDrawnRegion(drawnPolygon.id);
     }
     setDrawnPolygon(null);
-    if (selectedRegion?.id === drawnPolygon?.id) {
-      clearSelection();
-    }
-  }, [drawnPolygon, selectedRegion, clearSelection]);
-
-  // Clean up timers on unmount
-  useEffect(() => {
-    return () => {
-      if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
-      if (activeAbortRef.current) activeAbortRef.current.abort();
-    };
-  }, []);
+    clearSelection();
+  }, [drawnPolygon, clearSelection]);
 
   return {
     selectedRegion,
@@ -182,12 +166,12 @@ export function useRegionSelection() {
     detailsError,
     isDrawingMode,
     drawnPolygon,
-    setIsDrawingMode,
     selectRegion,
     clearSelection,
     handleRegionHoverEnter,
     handleRegionHoverLeave,
     commitDrawnRegion,
     clearDrawnRegion,
+    setIsDrawingMode,
   };
 }

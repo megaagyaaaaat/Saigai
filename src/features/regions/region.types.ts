@@ -7,6 +7,7 @@ export type RegionCategory =
   | 'landslide_corridor' 
   | 'watershed_basin' 
   | 'transboundary_zone' 
+  | 'state_jurisdiction'
   | 'user_drawn';
 
 export interface RegionMetadata {

@@ -6,13 +6,12 @@ import {
   Layers, 
   AlertOctagon, 
   Info, 
-  X,
-  Compass,
-  MapPin
+  X, 
+  Compass, 
+  MapPin 
 } from 'lucide-react';
 import type { RegionEntity } from '../../features/regions/region.types';
 import { MOCK_REGIONS } from '../../data/mockRegions';
-import { APP_CONFIG } from '../../api/apiConfig';
 
 interface AppHeaderProps {
   onSelectRegion: (region: RegionEntity) => void;
@@ -24,6 +23,17 @@ interface AppHeaderProps {
   selectedRegion?: RegionEntity | null;
   activeWarningCount: number;
 }
+
+const NE_STATES = [
+  { code: 'AS', name: 'Assam', id: 'state-assam' },
+  { code: 'SK', name: 'Sikkim', id: 'reg-teesta-rangit' },
+  { code: 'ML', name: 'Meghalaya', id: 'reg-shillong-escarpment' },
+  { code: 'AR', name: 'Arunachal', id: 'state-arunachal-pradesh' },
+  { code: 'NL', name: 'Nagaland', id: 'state-nagaland' },
+  { code: 'MN', name: 'Manipur', id: 'state-manipur' },
+  { code: 'MZ', name: 'Mizoram', id: 'state-mizoram' },
+  { code: 'TR', name: 'Tripura', id: 'state-tripura' },
+];
 
 export const AppHeader: React.FC<AppHeaderProps> = ({
   onSelectRegion,
@@ -74,7 +84,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   };
 
   return (
-    <header className="h-16 bg-ner-panel/90 backdrop-blur-md border-b border-ner-border px-4 lg:px-6 flex items-center justify-between z-30 select-none relative">
+    <header className="bg-ner-panel/90 backdrop-blur-md border-b border-ner-border px-4 lg:px-6 py-2.5 flex items-center justify-between z-30 select-none relative min-h-[4rem]">
       {/* Brand Identity */}
       <div className="flex items-center gap-3">
         <div className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-ner-surface border border-ner-border shadow-panel">
@@ -93,11 +103,11 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             </span>
             {selectedRegion ? (
               <span className="hidden lg:inline-flex text-[10px] font-mono px-2 py-0.5 rounded bg-ner-cyan/10 border border-ner-cyan/30 text-ner-cyan truncate max-w-[200px]">
-                AOI: {selectedRegion.name}
+                STATE: {selectedRegion.name}
               </span>
             ) : (
               <span className="hidden md:inline-flex text-[10px] font-mono px-1.5 py-0.5 rounded bg-ner-surface border border-ner-border text-ner-muted">
-                REGION-BASED GIS
+                8 STATES GIS
               </span>
             )}
           </div>
@@ -107,8 +117,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         </div>
       </div>
 
-      {/* Center: Search & Region Navigation (Mode 3: Search and Navigate) */}
-      <div className="flex-1 max-w-md mx-4 relative" ref={searchRef}>
+      {/* Center: Search & Quick State Selection */}
+      <div className="flex-1 max-w-xl mx-4 flex flex-col gap-1.5" ref={searchRef}>
         <div className="relative">
           <Search className="w-4 h-4 text-ner-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
@@ -119,7 +129,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               setIsSearchOpen(true);
             }}
             onFocus={() => setIsSearchOpen(true)}
-            placeholder="Search regions, mountain corridors, basins, highways..."
+            placeholder="Search 8 Northeast States (Assam, Sikkim, Meghalaya...)"
             className="w-full bg-ner-surface/80 border border-ner-border rounded-lg pl-9 pr-8 py-1.5 text-xs text-ner-text placeholder-ner-muted/60 ner-focus transition-all duration-200"
           />
           {searchQuery && (
@@ -135,12 +145,36 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           )}
         </div>
 
+        {/* Quick State Pills */}
+        <div className="hidden md:flex items-center gap-1.5 overflow-x-auto text-[10px] font-mono py-0.5">
+          <span className="text-ner-muted uppercase tracking-wider text-[9px] mr-1 shrink-0">States:</span>
+          {NE_STATES.map((st) => {
+            const isSelected = selectedRegion?.name.toLowerCase() === st.name.toLowerCase() || selectedRegion?.id === st.id;
+            return (
+              <button
+                key={st.code}
+                onClick={() => {
+                  const match = MOCK_REGIONS.find((r) => r.id === st.id || r.name.toLowerCase().includes(st.name.toLowerCase()));
+                  if (match) onSelectRegion(match);
+                }}
+                className={`px-2 py-0.5 rounded transition-all shrink-0 border ${
+                  isSelected
+                    ? 'bg-ner-cyan text-ner-bg border-ner-cyan font-bold shadow-glow-cyan'
+                    : 'bg-ner-surface/70 text-ner-muted hover:text-ner-cyan hover:border-ner-cyan/40 border-ner-border/60'
+                }`}
+              >
+                {st.name}
+              </button>
+            );
+          })}
+        </div>
+
         {/* Search Results Dropdown */}
         {isSearchOpen && searchResults.length > 0 && (
           <div className="absolute left-0 right-0 top-full mt-1.5 bg-ner-panel border border-ner-border rounded-xl shadow-panel overflow-hidden z-50 max-h-80 overflow-y-auto">
             <div className="p-2 border-b border-ner-border/50 text-[10px] font-mono text-ner-muted uppercase tracking-wider flex justify-between items-center">
-              <span>Geographic Regions Found ({searchResults.length})</span>
-              <span className="text-ner-cyan">Cross-State Aware</span>
+              <span>Geographic States & Regions Found ({searchResults.length})</span>
+              <span className="text-ner-cyan">All 8 Northeast States</span>
             </div>
             {searchResults.map((region) => (
               <button
@@ -199,35 +233,28 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         {/* Map Layers Toggle */}
         <button
           onClick={onToggleLayersModal}
-          title="Map Layer Controls"
-          className="p-1.5 rounded-lg bg-ner-surface border border-ner-border text-ner-muted hover:text-ner-text hover:border-ner-border-light transition-colors ner-focus relative"
+          title="Configure Map Overlays and Imagery"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-ner-surface border border-ner-border text-xs text-ner-muted hover:text-ner-text hover:border-ner-border-light transition-colors ner-focus"
         >
-          <Layers className="w-4 h-4" />
+          <Layers className="w-3.5 h-3.5" />
+          <span className="hidden lg:inline font-mono">Layers</span>
         </button>
 
-        {/* Active Warning Badge */}
+        {/* Active Emergency Warnings Badge */}
         {activeWarningCount > 0 && (
-          <div
-            title={`${activeWarningCount} Active Landslide Warnings across Northeast India`}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-ner-red/15 border border-ner-red/40 text-ner-red text-xs font-mono animate-pulse-subtle"
-          >
-            <AlertOctagon className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-ner-red/15 border border-ner-red/30 text-ner-red text-xs font-mono animate-pulse">
+            <AlertOctagon className="w-3.5 h-3.5 text-ner-red" />
             <span className="font-bold">{activeWarningCount}</span>
-            <span className="hidden xl:inline text-[11px]">ALERTS</span>
+            <span className="hidden xl:inline">Alerts</span>
           </div>
         )}
 
-        {/* Telemetry Status Indicator */}
-        <div className="hidden 2xl:flex items-center gap-1.5 px-2 py-1 rounded-md bg-ner-surface border border-ner-border text-[11px] font-mono text-ner-muted">
-          <span className="w-2 h-2 rounded-full bg-ner-emerald animate-pulse" />
-          <span>{APP_CONFIG.dataMode === 'demo' ? 'DEMO MOCK ADAPTER' : 'LIVE TELEMETRY'}</span>
-        </div>
-
-        {/* About & System Info */}
+        {/* About System Modal Trigger */}
         <button
           onClick={onOpenAboutModal}
-          title="NER-LEWS System Architecture & Metadata"
+          title="About NER-LEWS Platform & Methodology"
           className="p-1.5 rounded-lg bg-ner-surface border border-ner-border text-ner-muted hover:text-ner-text hover:border-ner-border-light transition-colors ner-focus"
+          aria-label="About platform"
         >
           <Info className="w-4 h-4" />
         </button>

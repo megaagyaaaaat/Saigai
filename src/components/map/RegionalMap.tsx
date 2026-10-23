@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Map as MapLibreMap, GeoJSONSource } from 'maplibre-gl';
+import { useEffect, useRef, useState, useCallback, forwardRef, useImperativeHandle } from 'react';
+import { Map as MapLibreMap, GeoJSONSource, NavigationControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import type { RegionEntity } from '../../features/regions/region.types';
 import type { IncidentRecord } from '../../features/incidents/incident.types';
@@ -30,7 +30,15 @@ interface RegionalMapProps {
   onSelectIncidentMarker?: (incident: IncidentRecord) => void;
 }
 
-export const RegionalMap: React.FC<RegionalMapProps> = ({
+export interface RegionalMapHandle {
+  zoomIn: () => void;
+  zoomOut: () => void;
+  resetNorth: () => void;
+  togglePitch: () => void;
+  getMap: () => MapLibreMap | null;
+}
+
+export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
   selectedRegion,
   hoveredRegion,
   onSelectRegion,
@@ -43,10 +51,28 @@ export const RegionalMap: React.FC<RegionalMapProps> = ({
   stations,
   waypoints,
   onSelectIncidentMarker,
-}) => {
+}, ref) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
+
+  useImperativeHandle(ref, () => ({
+    zoomIn: () => {
+      mapRef.current?.zoomIn({ duration: 300 });
+    },
+    zoomOut: () => {
+      mapRef.current?.zoomOut({ duration: 300 });
+    },
+    resetNorth: () => {
+      mapRef.current?.resetNorthPitch({ duration: 500 });
+    },
+    togglePitch: () => {
+      if (!mapRef.current) return;
+      const currentPitch = mapRef.current.getPitch();
+      mapRef.current.easeTo({ pitch: currentPitch > 10 ? 0 : 45, duration: 500 });
+    },
+    getMap: () => mapRef.current,
+  }));
 
   // Drawing state
   const [drawingVertices, setDrawingVertices] = useState<Position[]>([]);
@@ -112,6 +138,9 @@ export const RegionalMap: React.FC<RegionalMapProps> = ({
         compact: true,
       },
     });
+
+    const navControl = new NavigationControl({ showCompass: true, showZoom: true, visualizePitch: true });
+    map.addControl(navControl, 'bottom-left');
 
     map.on('load', () => {
       // 1. Add Contextual State Boundaries Reference Source & Layer
@@ -778,4 +807,5 @@ export const RegionalMap: React.FC<RegionalMapProps> = ({
       )}
     </div>
   );
-};
+});
+RegionalMap.displayName = "RegionalMap";

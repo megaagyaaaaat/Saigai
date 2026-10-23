@@ -1,6 +1,6 @@
 {
   "type": "FeatureCollection",
-  "name": "NER_LEWS_Geographic_Monitoring_Regions",
+  "name": "NER_LEWS_Northeast_India_State_Regions",
   "crs": {
     "type": "name",
     "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" }
@@ -11,43 +11,45 @@
       "id": "reg-shillong-escarpment",
       "properties": {
         "id": "reg-shillong-escarpment",
-        "name": "Shillong Plateau & Southern Escarpment",
-        "category": "transboundary_zone",
+        "name": "Meghalaya",
+        "code": "ML",
+        "category": "state_jurisdiction",
         "riskLevel": "critical",
         "statesCrossed": ["Meghalaya", "Assam"],
-        "areaKm2": 7420,
-        "dominantGeology": "Archaean Gneissic Complex & Cretaceous-Tertiary Sandstone",
+        "areaKm2": 22429,
+        "dominantGeology": "Archaean Gneissic Complex, Shillong Group Quartzites & Cretaceous Sandstone",
         "activeWarningCount": 3,
-        "historicalIncidentCount": 84,
+        "historicalIncidentCount": 30,
         "monitoringStationCount": 6,
         "avgRainfall72h": 312.4,
         "soilSaturationPercent": 88
       },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[91.15, 25.1], [91.9, 25.08], [92.45, 25.18], [92.55, 25.55], [92.2, 25.75], [91.6, 25.8], [91.2, 25.65], [91.05, 25.35], [91.15, 25.1]]]
+        "coordinates": [[[89.8, 25.2], [90.8, 25.2], [91.8, 25.1], [92.7, 25.1], [92.8, 25.7], [92.0, 25.9], [91.0, 25.9], [89.9, 25.8], [89.8, 25.2]]]
       }
     },
     {
       "type": "Feature",
-      "id": "reg-barail-haflong",
+      "id": "state-assam",
       "properties": {
-        "id": "reg-barail-haflong",
-        "name": "Barail Mountain Range & Haflong Corridor",
-        "category": "mountain_range",
+        "id": "state-assam",
+        "name": "Assam",
+        "code": "AS",
+        "category": "state_jurisdiction",
         "riskLevel": "high",
-        "statesCrossed": ["Assam", "Nagaland", "Manipur"],
-        "areaKm2": 6180,
-        "dominantGeology": "Disang Group splintery shales & Barail arenaceous formations",
+        "statesCrossed": ["Assam"],
+        "areaKm2": 78438,
+        "dominantGeology": "Brahmaputra Alluvium, Disang Shales & Barail Formations",
         "activeWarningCount": 2,
-        "historicalIncidentCount": 62,
-        "monitoringStationCount": 5,
-        "avgRainfall72h": 224.6,
-        "soilSaturationPercent": 81
+        "historicalIncidentCount": 84,
+        "monitoringStationCount": 7,
+        "avgRainfall72h": 185.4,
+        "soilSaturationPercent": 78
       },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[92.6, 25.0], [93.15, 24.85], [93.55, 25.1], [93.65, 25.45], [93.3, 25.6], [92.8, 25.5], [92.6, 25.0]]]
+        "coordinates": [[[89.8, 26.0], [90.5, 26.2], [91.5, 26.3], [92.5, 26.5], [93.8, 26.7], [94.8, 27.0], [95.8, 27.5], [95.7, 27.0], [94.5, 26.5], [93.5, 26.0], [92.8, 25.0], [92.4, 24.5], [92.9, 24.4], [93.2, 24.9], [92.6, 25.8], [91.5, 25.9], [90.5, 25.8], [89.8, 26.0]]]
       }
     },
     {
@@ -55,131 +57,137 @@
       "id": "reg-teesta-rangit",
       "properties": {
         "id": "reg-teesta-rangit",
-        "name": "Teesta-Rangit Himalayan Basin",
-        "category": "watershed_basin",
+        "name": "Sikkim",
+        "code": "SK",
+        "category": "state_jurisdiction",
         "riskLevel": "critical",
-        "statesCrossed": ["Sikkim", "West Bengal (Sub-Himalayan)"],
-        "areaKm2": 4890,
-        "dominantGeology": "Daling Group phyllites, schists & High Himalayan Gneiss",
+        "statesCrossed": ["Sikkim"],
+        "areaKm2": 7096,
+        "dominantGeology": "Daling Group Phyllites, Lingtse Gneiss & High Himalayan Metasediments",
         "activeWarningCount": 4,
-        "historicalIncidentCount": 112,
+        "historicalIncidentCount": 82,
         "monitoringStationCount": 8,
         "avgRainfall72h": 285.0,
         "soilSaturationPercent": 92
       },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[88.15, 27.05], [88.55, 26.9], [88.85, 27.2], [88.92, 27.75], [88.65, 28.05], [88.25, 27.8], [88.1, 27.4], [88.15, 27.05]]]
+        "coordinates": [[[88.1, 27.1], [88.7, 27.1], [88.9, 27.6], [88.8, 28.1], [88.3, 28.1], [88.1, 27.6], [88.1, 27.1]]]
       }
     },
     {
       "type": "Feature",
-      "id": "reg-kameng-subansiri",
+      "id": "state-arunachal-pradesh",
       "properties": {
-        "id": "reg-kameng-subansiri",
-        "name": "Kameng & Subansiri Foothills Corridor",
-        "category": "landslide_corridor",
+        "id": "state-arunachal-pradesh",
+        "name": "Arunachal Pradesh",
+        "code": "AR",
+        "category": "state_jurisdiction",
         "riskLevel": "high",
-        "statesCrossed": ["Arunachal Pradesh", "Assam"],
-        "areaKm2": 8350,
-        "dominantGeology": "Main Boundary Thrust (MBT) zone & Siwalik sandstone-conglomerate",
+        "statesCrossed": ["Arunachal Pradesh"],
+        "areaKm2": 83743,
+        "dominantGeology": "Main Boundary Thrust (MBT), Siwalik Molasse & Tethyan Sedimentary Series",
         "activeWarningCount": 2,
-        "historicalIncidentCount": 53,
+        "historicalIncidentCount": 46,
         "monitoringStationCount": 5,
-        "avgRainfall72h": 198.3,
-        "soilSaturationPercent": 74
+        "avgRainfall72h": 210.6,
+        "soilSaturationPercent": 76
       },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[92.15, 27.0], [92.7, 26.85], [93.6, 27.15], [93.85, 27.6], [93.5, 27.95], [92.65, 27.85], [92.1, 27.45], [92.15, 27.0]]]
+        "coordinates": [[[91.6, 27.2], [92.5, 27.0], [93.5, 27.1], [94.5, 27.5], [95.5, 27.8], [96.5, 28.0], [97.2, 28.4], [97.3, 28.9], [96.5, 29.3], [95.5, 29.4], [94.5, 29.0], [93.5, 28.5], [92.0, 28.0], [91.6, 27.5], [91.6, 27.2]]]
       }
     },
     {
       "type": "Feature",
-      "id": "reg-naga-hills-nh2",
+      "id": "state-nagaland",
       "properties": {
-        "id": "reg-naga-hills-nh2",
-        "name": "Naga Hills & Kohima-Dimapur Pass",
-        "category": "landslide_corridor",
+        "id": "state-nagaland",
+        "name": "Nagaland",
+        "code": "NL",
+        "category": "state_jurisdiction",
         "riskLevel": "elevated",
-        "statesCrossed": ["Nagaland", "Manipur"],
-        "areaKm2": 4320,
-        "dominantGeology": "Tertiary fold belt shales & sheared mudstones",
+        "statesCrossed": ["Nagaland"],
+        "areaKm2": 16579,
+        "dominantGeology": "Indo-Burma Accretionary Prism, Disang Flysch & Mudstones",
         "activeWarningCount": 1,
-        "historicalIncidentCount": 47,
+        "historicalIncidentCount": 79,
         "monitoringStationCount": 4,
         "avgRainfall72h": 145.2,
-        "soilSaturationPercent": 68
+        "soilSaturationPercent": 71
       },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[93.65, 25.55], [94.15, 25.4], [94.55, 25.7], [94.45, 26.15], [93.95, 26.25], [93.6, 25.9], [93.65, 25.55]]]
+        "coordinates": [[[93.4, 25.6], [94.0, 25.5], [94.8, 26.0], [95.2, 26.8], [94.8, 27.0], [94.2, 26.5], [93.8, 26.1], [93.4, 25.6]]]
       }
     },
     {
       "type": "Feature",
-      "id": "reg-mizo-hills-tuirial",
+      "id": "state-manipur",
       "properties": {
-        "id": "reg-mizo-hills-tuirial",
-        "name": "Mizo Ridge & Tuirial River Basin",
-        "category": "watershed_basin",
+        "id": "state-manipur",
+        "name": "Manipur",
+        "code": "MN",
+        "category": "state_jurisdiction",
         "riskLevel": "elevated",
-        "statesCrossed": ["Mizoram", "Assam"],
-        "areaKm2": 5610,
-        "dominantGeology": "Surma Group alternating siltstone, shale and sandstone bands",
+        "statesCrossed": ["Manipur"],
+        "areaKm2": 22327,
+        "dominantGeology": "Tertiary Arenaceous Formations & Splintery Disang Shales",
         "activeWarningCount": 1,
-        "historicalIncidentCount": 39,
+        "historicalIncidentCount": 58,
         "monitoringStationCount": 4,
-        "avgRainfall72h": 162.7,
+        "avgRainfall72h": 138.8,
+        "soilSaturationPercent": 69
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[93.1, 24.2], [93.8, 23.8], [94.4, 24.2], [94.5, 25.2], [94.0, 25.6], [93.5, 25.5], [93.2, 24.8], [93.1, 24.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "state-mizoram",
+      "properties": {
+        "id": "state-mizoram",
+        "name": "Mizoram",
+        "code": "MZ",
+        "category": "state_jurisdiction",
+        "riskLevel": "moderate",
+        "statesCrossed": ["Mizoram"],
+        "areaKm2": 21081,
+        "dominantGeology": "Surma Group Interbedded Sandstone, Siltstone and Shale",
+        "activeWarningCount": 1,
+        "historicalIncidentCount": 28,
+        "monitoringStationCount": 4,
+        "avgRainfall72h": 155.0,
         "soilSaturationPercent": 65
       },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[92.5, 23.6], [92.95, 23.5], [93.25, 23.9], [93.1, 24.5], [92.65, 24.65], [92.4, 24.15], [92.5, 23.6]]]
+        "coordinates": [[[92.3, 22.0], [93.0, 22.2], [93.3, 23.0], [93.2, 24.2], [92.6, 24.4], [92.2, 23.5], [92.3, 22.0]]]
       }
     },
     {
       "type": "Feature",
-      "id": "reg-siang-dibang",
+      "id": "state-tripura",
       "properties": {
-        "id": "reg-siang-dibang",
-        "name": "Siang Canyon & Dibang Escarpment",
-        "category": "transboundary_zone",
-        "riskLevel": "high",
-        "statesCrossed": ["Arunachal Pradesh", "Assam"],
-        "areaKm2": 9780,
-        "dominantGeology": "Eastern Himalayan Syntaxis gneisses & Abor Volcanics",
-        "activeWarningCount": 2,
-        "historicalIncidentCount": 71,
-        "monitoringStationCount": 6,
-        "avgRainfall72h": 245.5,
-        "soilSaturationPercent": 78
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[[94.6, 28.0], [95.4, 27.85], [95.95, 28.25], [95.8, 29.15], [94.95, 29.25], [94.4, 28.65], [94.6, 28.0]]]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "reg-surma-barak-jaintia",
-      "properties": {
-        "id": "reg-surma-barak-jaintia",
-        "name": "Surma-Barak Piedmont & Jaintia Slopes",
-        "category": "mountain_range",
+        "id": "state-tripura",
+        "name": "Tripura",
+        "code": "TR",
+        "category": "state_jurisdiction",
         "riskLevel": "low",
-        "statesCrossed": ["Meghalaya", "Assam"],
-        "areaKm2": 3840,
-        "dominantGeology": "Jaintia Group nummulitic limestones & tertiary shales",
+        "statesCrossed": ["Tripura"],
+        "areaKm2": 10491,
+        "dominantGeology": "Tipam Sandstone, Dupitila Formation & Alluvial Sands",
         "activeWarningCount": 0,
-        "historicalIncidentCount": 28,
+        "historicalIncidentCount": 4,
         "monitoringStationCount": 3,
-        "avgRainfall72h": 110.2,
-        "soilSaturationPercent": 52
+        "avgRainfall72h": 118.2,
+        "soilSaturationPercent": 58
       },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[92.2, 24.95], [92.75, 24.8], [93.05, 25.1], [92.9, 25.4], [92.4, 25.45], [92.15, 25.2], [92.2, 24.95]]]
+        "coordinates": [[[91.2, 23.0], [91.8, 23.0], [92.2, 23.5], [92.3, 24.3], [91.8, 24.2], [91.2, 23.8], [91.2, 23.0]]]
       }
     }
   ]

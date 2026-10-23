@@ -121,3 +121,8 @@
   outline: 2px solid #64E2E8;
   outline-offset: 2px;
 }
+
+/* Hide default native navigation controls container as we render custom MapControls */
+.maplibregl-ctrl-bottom-left {
+  display: none !important;
+}

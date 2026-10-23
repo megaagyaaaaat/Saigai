@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RegionalMap } from '../map/RegionalMap';
+import { RegionalMap, type RegionalMapHandle } from '../map/RegionalMap';
 import { MapControls, type MapLayerVisibility } from '../map/MapControls';
 import { MapLegend } from '../map/MapLegend';
-import { RegionPreview } from '../regions/RegionPreview';
 import { RegionDetailsPanel } from '../regions/RegionDetailsPanel';
 import { LoadingState } from '../ui/LoadingState';
 import { ErrorState } from '../ui/ErrorState';
@@ -39,6 +38,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   onResetCamera,
 }) => {
   const prefersReducedMotion = useReducedMotion();
+  const mapHandleRef = useRef<RegionalMapHandle>(null);
 
   const [layers, setLayers] = useState<MapLayerVisibility>({
     showSatellite: true,
@@ -73,13 +73,14 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   // Cinematic spring / easing config
   const transitionConfig = prefersReducedMotion
     ? { duration: 0 }
-    : { type: 'spring', damping: 28, stiffness: 220, duration: 0.55 };
+    : { type: 'spring', damping: 28, stiffness: 220, duration: 0.45 };
 
   return (
     <main className="relative flex-1 w-full h-[calc(100vh-4rem)] overflow-hidden flex bg-ner-bg select-none">
       {/* 1. Map Workspace (Dominant Element) */}
       <div className="relative flex-1 h-full min-w-0 overflow-hidden">
         <RegionalMap
+          ref={mapHandleRef}
           selectedRegion={selectedRegion}
           hoveredRegion={hoveredRegion}
           onSelectRegion={selectRegion}
@@ -93,21 +94,36 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           waypoints={waypoints}
         />
 
-        {/* Map Controls */}
+        {/* Map Controls (+ and - zoom buttons, 3D, compass) */}
         <MapControls
           onZoomIn={() => {
-            const btn = document.querySelector('.maplibregl-ctrl-zoom-in') as HTMLButtonElement;
-            btn?.click();
+            if (mapHandleRef.current) {
+              mapHandleRef.current.zoomIn();
+            } else {
+              const btn = document.querySelector('.maplibregl-ctrl-zoom-in') as HTMLButtonElement;
+              btn?.click();
+            }
           }}
           onZoomOut={() => {
-            const btn = document.querySelector('.maplibregl-ctrl-zoom-out') as HTMLButtonElement;
-            btn?.click();
+            if (mapHandleRef.current) {
+              mapHandleRef.current.zoomOut();
+            } else {
+              const btn = document.querySelector('.maplibregl-ctrl-zoom-out') as HTMLButtonElement;
+              btn?.click();
+            }
           }}
           onResetNorth={() => {
-            const btn = document.querySelector('.maplibregl-ctrl-compass') as HTMLButtonElement;
-            btn?.click();
+            if (mapHandleRef.current) {
+              mapHandleRef.current.resetNorth();
+            } else {
+              const btn = document.querySelector('.maplibregl-ctrl-compass') as HTMLButtonElement;
+              btn?.click();
+            }
           }}
-          onTogglePitch={() => setIsPitchActive(!isPitchActive)}
+          onTogglePitch={() => {
+            setIsPitchActive(!isPitchActive);
+            mapHandleRef.current?.togglePitch();
+          }}
           isPitchActive={isPitchActive}
           layers={layers}
           onToggleLayer={toggleLayer}
@@ -118,7 +134,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         {!selectedRegion && <MapLegend />}
       </div>
 
-      {/* 2. Cinematic Split-View Detail Panel (Appears on committed selection) */}
+      {/* 2. Focused Right-Side State Telemetry Drawer (Clean & Uncluttered) */}
       <AnimatePresence>
         {selectedRegion && (
           <motion.div
@@ -127,12 +143,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
             transition={transitionConfig}
-            className="absolute lg:relative right-0 top-0 bottom-0 w-full lg:w-[680px] xl:w-[820px] 2xl:w-[960px] z-30 flex flex-col lg:flex-row shadow-2xl border-l border-ner-border bg-ner-panel"
+            className="absolute right-0 top-0 bottom-0 w-full sm:w-[440px] md:w-[480px] lg:w-[500px] z-30 flex flex-col shadow-2xl border-l border-ner-border bg-ner-panel/95 backdrop-blur-md"
           >
-            {/* Left side: Selected Region Geometry Preview */}
-            <RegionPreview region={selectedRegion} onClose={clearSelection} />
-
-            {/* Right side: Telemetry, History, Charts, and Records */}
+            {/* Telemetry, Live Weather, History, and Records */}
             <div className="flex-1 flex flex-col h-full overflow-hidden">
               {isLoadingDetails && (
                 <div className="p-8 flex items-center justify-center h-full">
@@ -161,7 +174,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Modals */}
+      {/* 3. Layer Configuration Modal */}
       <LayersModal
         isOpen={isLayersModalOpen}
         onClose={onCloseLayersModal}
@@ -169,6 +182,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         onToggleLayer={toggleLayer}
       />
 
+      {/* 4. About & Methodology Information Modal */}
       <AboutModal isOpen={isAboutModalOpen} onClose={onCloseAboutModal} />
     </main>
   );

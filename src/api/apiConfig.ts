@@ -10,11 +10,11 @@ export interface AppConfig {
 }
 
 export const APP_CONFIG: AppConfig = {
-  // Configurable base URL for future backend integration
-  apiBaseUrl: import.meta.env.VITE_API_BASE_URL || 'https://api.ner-lews.gov.in/v1',
+  // Configurable base URL: points to local backend via Vite proxy or direct URL
+  apiBaseUrl: import.meta.env.VITE_API_BASE_URL || '/api/v1',
   
-  // Default to 'demo' mock mode until backend is deployed
-  dataMode: (import.meta.env.VITE_DATA_MODE as 'demo' | 'live') || 'demo',
+  // Default to 'live' backend mode with graceful fallback to mock data if offline
+  dataMode: (import.meta.env.VITE_DATA_MODE as 'demo' | 'live') || 'live',
   
   requestTimeoutMs: 10000,
 

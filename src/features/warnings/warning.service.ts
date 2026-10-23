@@ -11,18 +11,23 @@ export interface WarningService {
 export class MockWarningService implements WarningService {
   async getWarningsByRegion(regionId: string, signal?: AbortSignal): Promise<WarningRecord[]> {
     await new Promise((res, rej) => {
-      const timer = setTimeout(res, 80);
+      const timer = setTimeout(res, 50);
       signal?.addEventListener('abort', () => {
         clearTimeout(timer);
         rej(new DOMException('Aborted', 'AbortError'));
       });
     });
 
-    return MOCK_WARNINGS.filter((w) => w.regionId === regionId);
+    return MOCK_WARNINGS.filter(
+      (w) =>
+        w.regionId === regionId ||
+        (regionId.includes('meghalaya') && w.regionId.includes('shillong')) ||
+        (regionId.includes('sikkim') && w.regionId.includes('teesta'))
+    );
   }
 
   async getActiveWarnings(_signal?: AbortSignal): Promise<WarningRecord[]> {
-    await new Promise((res) => setTimeout(res, 50));
+    await new Promise((res) => setTimeout(res, 40));
     return [...MOCK_WARNINGS];
   }
 }
@@ -37,5 +42,37 @@ export class HttpWarningService implements WarningService {
   }
 }
 
-export const warningService: WarningService =
-  APP_CONFIG.dataMode === 'live' ? new HttpWarningService() : new MockWarningService();
+export class ResilientWarningService implements WarningService {
+  private fallback = new MockWarningService();
+  private http = new HttpWarningService();
+
+  async getWarningsByRegion(regionId: string, signal?: AbortSignal): Promise<WarningRecord[]> {
+    if (APP_CONFIG.dataMode === 'demo') {
+      return this.fallback.getWarningsByRegion(regionId, signal);
+    }
+    try {
+      const data = await this.http.getWarningsByRegion(regionId, signal);
+      if (Array.isArray(data)) return data;
+      return this.fallback.getWarningsByRegion(regionId, signal);
+    } catch (err: any) {
+      if (err?.name === 'AbortError') throw err;
+      return this.fallback.getWarningsByRegion(regionId, signal);
+    }
+  }
+
+  async getActiveWarnings(signal?: AbortSignal): Promise<WarningRecord[]> {
+    if (APP_CONFIG.dataMode === 'demo') {
+      return this.fallback.getActiveWarnings(signal);
+    }
+    try {
+      const data = await this.http.getActiveWarnings(signal);
+      if (Array.isArray(data)) return data;
+      return this.fallback.getActiveWarnings(signal);
+    } catch (err: any) {
+      if (err?.name === 'AbortError') throw err;
+      return this.fallback.getActiveWarnings(signal);
+    }
+  }
+}
+
+export const warningService: WarningService = new ResilientWarningService();
