@@ -48,8 +48,8 @@ describe('Geospatial Geometry Engine (geo.ts)', () => {
     const bounds = computeBounds(shillong.geometry);
     expect(bounds[0]).toBeLessThan(bounds[2]); // minLng < maxLng
     expect(bounds[1]).toBeLessThan(bounds[3]); // minLat < maxLat
-    expect(bounds[0]).toBeCloseTo(91.05, 1);
-    expect(bounds[2]).toBeCloseTo(92.55, 1);
+    expect(bounds[0]).toBeCloseTo(89.82, 1);
+    expect(bounds[2]).toBeCloseTo(92.80, 1);
   });
 
   it('accurately identifies points inside vs outside regional polygons', () => {

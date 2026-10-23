@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RegionalMap, type RegionalMapHandle } from '../map/RegionalMap';
 import { MapControls, type MapLayerVisibility } from '../map/MapControls';
@@ -7,6 +7,7 @@ import { RegionDetailsPanel } from '../regions/RegionDetailsPanel';
 import { LoadingState } from '../ui/LoadingState';
 import { ErrorState } from '../ui/ErrorState';
 import { LayersModal } from './LayersModal';
+import { FadeToBlack } from './FadeToBlack';
 import { AboutModal } from './AboutModal';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import type { useRegionSelection } from '../../hooks/useRegionSelection';
@@ -24,6 +25,7 @@ interface DashboardLayoutProps {
   onCloseLayersModal: () => void;
   onCloseAboutModal: () => void;
   onResetCamera: () => void;
+  mapHandleRef: React.RefObject<RegionalMapHandle>;
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
@@ -36,21 +38,35 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   onCloseLayersModal,
   onCloseAboutModal,
   onResetCamera,
+  mapHandleRef,
 }) => {
   const prefersReducedMotion = useReducedMotion();
-  const mapHandleRef = useRef<RegionalMapHandle>(null);
 
   const [layers, setLayers] = useState<MapLayerVisibility>({
     showSatellite: true,
     showStateBoundaries: true,
     showRegions: true,
-    showIncidents: true,
-    showStations: true,
+    // The map opens clean; markers are switched on from Map Overlays
+    showIncidents: false,
+    showStations: false,
     showWarnings: true,
-    showWaypoints: true,
+    showWaypoints: false,
+    showTerrain: true,
   });
 
-  const [isPitchActive, setIsPitchActive] = useState(false);
+  const [isPitchActive, setIsPitchActive] = useState(true);
+  const [isFadingOut, setIsFadingOut] = useState(false);
+
+  // Slow pull-back while the whole screen goes black
+  const startFadeOut = () => {
+    mapHandleRef.current?.startOutro(10500);
+    setIsFadingOut(true);
+  };
+
+  const endFadeOut = () => {
+    setIsFadingOut(false);
+    mapHandleRef.current?.endOutro();
+  };
 
   const toggleLayer = (key: keyof MapLayerVisibility) => {
     setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -128,10 +144,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           layers={layers}
           onToggleLayer={toggleLayer}
           onResetCamera={onResetCamera}
-        />
-
-        {/* Geospatial Map Legend */}
-        {!selectedRegion && <MapLegend />}
+          onFadeOut={startFadeOut}
+          shiftForDetailsPanel={!!selectedRegion}
+        >
+          {/* Geospatial Map Legend */}
+          {!selectedRegion && <MapLegend />}
+        </MapControls>
       </div>
 
       {/* 2. Focused Right-Side State Telemetry Drawer (Clean & Uncluttered) */}
@@ -143,7 +161,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
             transition={transitionConfig}
-            className="absolute right-0 top-0 bottom-0 w-full sm:w-[440px] md:w-[480px] lg:w-[500px] z-30 flex flex-col shadow-2xl border-l border-ner-border bg-ner-panel/95 backdrop-blur-md"
+            className="absolute right-0 top-0 bottom-0 w-full sm:right-4 sm:top-4 sm:bottom-4 sm:w-[440px] md:w-[480px] lg:w-[500px] z-30 flex flex-col overflow-hidden sm:rounded-2xl border-l sm:border border-ner-border-light/50 bg-[#0f0f11] shadow-[0_20px_60px_rgba(0,0,0,0.55)]"
           >
             {/* Telemetry, Live Weather, History, and Records */}
             <div className="flex-1 flex flex-col h-full overflow-hidden">
@@ -184,6 +202,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
       {/* 4. About & Methodology Information Modal */}
       <AboutModal isOpen={isAboutModalOpen} onClose={onCloseAboutModal} />
+
+      <FadeToBlack active={isFadingOut} onExit={endFadeOut} durationMs={9000} delayMs={1500} />
     </main>
   );
 };

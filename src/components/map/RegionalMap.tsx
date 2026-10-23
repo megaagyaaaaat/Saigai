@@ -12,8 +12,36 @@ import { MOCK_REGIONS_GEOJSON } from '../../data/mockRegions';
 import { computeBounds, calculateAreaKm2 } from '../../lib/geo';
 import type { Position } from 'geojson';
 
-const NE_CENTER: [number, number] = [92.8, 25.8];
-const NE_DEFAULT_ZOOM = 6.4;
+// Framed so all 8 states are in view, with room on the right for the controls
+const NE_CENTER: [number, number] = [93.2, 25.0];
+const NE_DEFAULT_ZOOM = 5.6;
+// Cinematic opening: start high above Asia, then glide down into a tilted view of the Northeast
+const INTRO_CENTER: [number, number] = [89.5, 24.5];
+const INTRO_ZOOM = 4.2;
+const NE_TILT = { pitch: 48, bearing: -12 };
+const INTRO_MS = 7000;
+const MAX_PIXEL_RATIO = 1.5;
+// How far the closing shot pulls back (zoom levels)
+const OUTRO_ZOOM_OUT = 3.2;
+// Panning is kept inside the Northeast so the rest of India / neighbouring countries can't be browsed
+const NE_MAX_BOUNDS: [[number, number], [number, number]] = [[85.0, 20.0], [98.5, 30.0]];
+
+/**
+ * Adds the "everything outside the 8 states fades to black" mask beneath all data layers.
+ * The geometry is prebuilt (scripts/build-ne-mask.mjs) so nothing heavy runs at startup.
+ */
+function addOutsideMask(map: MapLibreMap) {
+  map.addSource('outside-mask-src', { type: 'geojson', data: '/data/ne_outside_mask.geojson' });
+  map.addLayer(
+    {
+      id: 'outside-mask',
+      type: 'fill',
+      source: 'outside-mask-src',
+      paint: { 'fill-color': '#000000', 'fill-opacity': ['get', 'opacity'], 'fill-antialias': false },
+    },
+    'state-boundaries-line'
+  );
+}
 
 interface RegionalMapProps {
   selectedRegion: RegionEntity | null;
@@ -35,6 +63,9 @@ export interface RegionalMapHandle {
   zoomOut: () => void;
   resetNorth: () => void;
   togglePitch: () => void;
+  resetView: () => void;
+  startOutro: (durationMs: number) => void;
+  endOutro: () => void;
   getMap: () => MapLibreMap | null;
 }
 
@@ -54,7 +85,9 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
 }, ref) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
+  const outroFromRef = useRef<{ center: [number, number]; zoom: number; pitch: number; bearing: number } | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [terrainReady, setTerrainReady] = useState(false);
 
   useImperativeHandle(ref, () => ({
     zoomIn: () => {
@@ -70,6 +103,47 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
       if (!mapRef.current) return;
       const currentPitch = mapRef.current.getPitch();
       mapRef.current.easeTo({ pitch: currentPitch > 10 ? 0 : 45, duration: 500 });
+    },
+    resetView: () => {
+      mapRef.current?.flyTo({
+        center: NE_CENTER,
+        zoom: NE_DEFAULT_ZOOM,
+        ...NE_TILT,
+        duration: 1800,
+        essential: true,
+      });
+    },
+    // Closing shot: lift the view limits, then pull far back while slowly turning
+    startOutro: (durationMs: number) => {
+      const map = mapRef.current;
+      if (!map) return;
+      outroFromRef.current = {
+        center: map.getCenter().toArray() as [number, number],
+        zoom: map.getZoom(),
+        pitch: map.getPitch(),
+        bearing: map.getBearing(),
+      };
+      map.setMinZoom(0);
+      map.setMaxBounds(null as any);
+      map.easeTo({
+        zoom: map.getZoom() - OUTRO_ZOOM_OUT,
+        bearing: map.getBearing() + 14,
+        duration: durationMs,
+        easing: (t) => t * (2 - t),
+        essential: true,
+      });
+    },
+    endOutro: () => {
+      const map = mapRef.current;
+      const from = outroFromRef.current;
+      if (!map || !from) return;
+      outroFromRef.current = null;
+      map.stop();
+      map.once('moveend', () => {
+        map.setMinZoom(5.2);
+        map.setMaxBounds(NE_MAX_BOUNDS);
+      });
+      map.flyTo({ ...from, duration: 1600, essential: true });
     },
     getMap: () => mapRef.current,
   }));
@@ -121,16 +195,19 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
               visibility: layers.showSatellite ? 'visible' : 'none',
             },
             paint: {
-              'raster-brightness-max': 0.7,
-              'raster-contrast': 0.15,
-              'raster-saturation': -0.4, // Muted, darker basemap so overlays stand out
+              'raster-brightness-max': 0.95,
+              'raster-contrast': 0.12,
+              'raster-saturation': -0.1,
             },
           },
         ],
       },
-      center: NE_CENTER,
-      zoom: NE_DEFAULT_ZOOM,
-      minZoom: 5.0,
+      center: INTRO_CENTER,
+      zoom: INTRO_ZOOM,
+      minZoom: 3,
+      renderWorldCopies: false,
+      fadeDuration: 120,
+      pixelRatio: 1, // full resolution is restored once the opening flight ends
       maxZoom: 16.0,
       pitch: 0,
       bearing: 0,
@@ -158,7 +235,7 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
           'line-join': 'round',
         },
         paint: {
-          'line-color': '#96A8BA',
+          'line-color': '#a1a1aa',
           'line-width': 1.2,
           'line-dasharray': [3, 2],
           'line-opacity': 0.45,
@@ -289,7 +366,7 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
           'circle-radius': 5,
           'circle-color': '#64E2E8',
           'circle-stroke-width': 2,
-          'circle-stroke-color': '#080D14',
+          'circle-stroke-color': '#0a0a0b',
         },
       });
 
@@ -346,7 +423,7 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
           'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, 3, 8, 4.5, 12, 7],
           'circle-color': '#64E2E8',
           'circle-stroke-width': 1.5,
-          'circle-stroke-color': '#0E1621',
+          'circle-stroke-color': '#121214',
           'circle-opacity': 0.95,
         },
       });
@@ -372,6 +449,35 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
           'circle-stroke-opacity': 0.8,
           'circle-opacity': 0.9,
         },
+      });
+
+      addOutsideMask(map);
+
+      // 3D terrain: real elevation draped with the satellite imagery
+      map.addSource('terrain-dem', {
+        type: 'raster-dem',
+        tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+        encoding: 'terrarium',
+        tileSize: 256,
+        maxzoom: 11,
+        attribution: 'Terrain © Mapzen, AWS Terrain Tiles',
+      });
+
+      // Once the intro (or the user, if they interrupt it) is done, keep the view inside the Northeast
+      map.once('moveend', () => {
+        map.setMinZoom(5.2);
+        map.setMaxBounds(NE_MAX_BOUNDS);
+        map.setPixelRatio(Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO));
+        setTerrainReady(true); // 3D relief is the heaviest layer: switch it on after the flight, not during it
+      });
+      const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      map.flyTo({
+        center: NE_CENTER,
+        zoom: NE_DEFAULT_ZOOM,
+        ...NE_TILT,
+        duration: reduceMotion ? 0 : INTRO_MS,
+        curve: 1.5,
+        essential: true,
       });
 
       mapRef.current = map;
@@ -408,7 +514,13 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
     if (map.getLayer('stations-points')) {
       map.setLayoutProperty('stations-points', 'visibility', layers.showStations ? 'visible' : 'none');
     }
-  }, [layers, mapLoaded]);
+    if (map.getLayer('waypoints-points')) {
+      map.setLayoutProperty('waypoints-points', 'visibility', layers.showWaypoints ? 'visible' : 'none');
+    }
+    if (terrainReady && map.getSource('terrain-dem')) {
+      map.setTerrain(layers.showTerrain ? { source: 'terrain-dem', exaggeration: 1.3 } : null);
+    }
+  }, [layers, mapLoaded, terrainReady]);
 
   // Update Incidents markers data
   useEffect(() => {
@@ -562,21 +674,37 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
     const onMouseEnter = () => {
       if (!isDrawingMode) map.getCanvas().style.cursor = 'pointer';
     };
+    let lastHoverId: string | null = null;
+    let hoverRaf = 0;
+    let hoverPoint: { x: number; y: number } | null = null;
+
     const onMouseLeave = () => {
       if (!isDrawingMode) map.getCanvas().style.cursor = '';
+      lastHoverId = null;
       onHoverRegionLeave();
     };
 
     const onMouseMove = (e: any) => {
       if (isDrawingMode) return;
+      if (e.originalEvent?.buttons) return; // panning / rotating: no hover work
+      hoverPoint = e.point;
+      if (hoverRaf) return;
+      hoverRaf = requestAnimationFrame(() => {
+        hoverRaf = 0;
+        if (hoverPoint) processHover(hoverPoint);
+      });
+    };
 
-      const features = map.queryRenderedFeatures(e.point, {
+    const processHover = (point: { x: number; y: number }) => {
+      const features = map.queryRenderedFeatures(point as any, {
         layers: ['regions-fill'],
       });
 
       if (features.length > 0) {
         const feature = features[0];
         const properties = feature.properties as any;
+        if (properties.id === lastHoverId) return;
+        lastHoverId = properties.id;
         const regionEntity: RegionEntity = {
           id: properties.id,
           name: properties.name,
@@ -600,7 +728,8 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
           bounds: computeBounds(feature.geometry as any),
         };
         onHoverRegionEnter(regionEntity);
-      } else {
+      } else if (lastHoverId !== null) {
+        lastHoverId = null;
         onHoverRegionLeave();
       }
     };
@@ -699,6 +828,7 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
       map.off('mouseleave', 'regions-fill', onMouseLeave);
       map.off('mousemove', onMouseMove);
       map.off('click', onMapClick);
+      if (hoverRaf) cancelAnimationFrame(hoverRaf);
     };
   }, [isDrawingMode, mapLoaded, onHoverRegionEnter, onHoverRegionLeave, onSelectRegion, incidents, onSelectIncidentMarker]);
 
@@ -765,7 +895,7 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
   }, [drawingVertices, onCommitDrawnRegion]);
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-[#080D14]">
+    <div className="relative w-full h-full overflow-hidden bg-[#0a0a0b]">
       {/* Map Container */}
       <div ref={mapContainerRef} className="w-full h-full" />
 

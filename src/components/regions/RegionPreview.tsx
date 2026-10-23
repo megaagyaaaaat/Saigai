@@ -51,7 +51,7 @@ export const RegionPreview: React.FC<RegionPreviewProps> = ({ region }) => {
                 cx={x}
                 cy={y}
                 r="3.5"
-                fill="#080D14"
+                fill="#0a0a0b"
                 stroke="#64E2E8"
                 strokeWidth="1.5"
               />
@@ -102,7 +102,7 @@ export const RegionPreview: React.FC<RegionPreviewProps> = ({ region }) => {
             <radialGradient id="regionGlow" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#64E2E8" stopOpacity="0.4" />
               <stop offset="70%" stopColor="#64A8FF" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="#111C29" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#171719" stopOpacity="0.8" />
             </radialGradient>
           </defs>
           {renderSvgPolygons()}

@@ -1,4 +1,5 @@
 import type { RegionEntity, RegionGeoJSONFeatureCollection } from '../features/regions/region.types';
+import NE_GEOMETRIES from './neStateGeometries.json';
 
 export const MOCK_REGIONS: RegionEntity[] = [
   {
@@ -18,21 +19,8 @@ export const MOCK_REGIONS: RegionEntity[] = [
     description: 'High-altitude plateau with precipitous southern escarpment facing Bangladesh plains. World-record orographic monsoonal precipitation produces severe debris slips, rockfalls along NH-6, and slope failures in East Khasi and Jaintia Hills.',
     dataSource: 'Geological Survey of India (GSI) & IMD AWS Telemetry',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 18).toISOString(),
-    geometry: {
-      type: 'Polygon',
-      coordinates: [[
-        [91.05, 25.10],
-        [91.90, 25.08],
-        [92.45, 25.18],
-        [92.55, 25.55],
-        [92.20, 25.75],
-        [91.60, 25.80],
-        [91.20, 25.65],
-        [91.05, 25.35],
-        [91.05, 25.10]
-      ]]
-    },
-    bounds: [91.05, 25.08, 92.55, 25.80]
+    geometry: NE_GEOMETRIES['Meghalaya'] as RegionEntity['geometry'],
+    bounds: [89.8185, 25.0295, 92.8047, 26.1175]
   },
   {
     id: 'state-assam',
@@ -51,30 +39,8 @@ export const MOCK_REGIONS: RegionEntity[] = [
     description: 'Brahmaputra river valley flanked by geologically fragile hill districts (Dima Hasao and Karbi Anglong). Prone to heavy rainfall-triggered slope failures along the Lumding-Badarpur hill railway track and NH-27.',
     dataSource: 'ASDMA & NERIST Geohazards Observatory',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
-    geometry: {
-      type: 'Polygon',
-      coordinates: [[
-        [89.8, 26.0],
-        [90.5, 26.2],
-        [91.5, 26.3],
-        [92.5, 26.5],
-        [93.8, 26.7],
-        [94.8, 27.0],
-        [95.8, 27.5],
-        [95.7, 27.0],
-        [94.5, 26.5],
-        [93.5, 26.0],
-        [92.8, 25.0],
-        [92.4, 24.5],
-        [92.9, 24.4],
-        [93.2, 24.9],
-        [92.6, 25.8],
-        [91.5, 25.9],
-        [90.5, 25.8],
-        [89.8, 26.0]
-      ]]
-    },
-    bounds: [89.8, 24.4, 95.8, 27.5]
+    geometry: NE_GEOMETRIES['Assam'] as RegionEntity['geometry'],
+    bounds: [89.6997, 24.133, 96.0185, 27.972]
   },
   {
     id: 'reg-teesta-rangit',
@@ -93,19 +59,8 @@ export const MOCK_REGIONS: RegionEntity[] = [
     description: 'Rugged Himalayan gorge terrain drained by Teesta and Rangit river systems. Compounding vulnerability from Glacial Lake Outburst Floods (GLOFs), toe erosion along NH-10 (Sevoke-Gangtok), and high-velocity debris flows.',
     dataSource: 'Sikkim State Disaster Management Authority & CWC Telemetry',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 8).toISOString(),
-    geometry: {
-      type: 'Polygon',
-      coordinates: [[
-        [88.1, 27.1],
-        [88.7, 27.1],
-        [88.9, 27.6],
-        [88.8, 28.1],
-        [88.3, 28.1],
-        [88.1, 27.6],
-        [88.1, 27.1]
-      ]]
-    },
-    bounds: [88.1, 27.1, 88.9, 28.1]
+    geometry: NE_GEOMETRIES['Sikkim'] as RegionEntity['geometry'],
+    bounds: [88.0169, 27.0813, 88.9295, 28.1293]
   },
   {
     id: 'state-arunachal-pradesh',
@@ -124,27 +79,8 @@ export const MOCK_REGIONS: RegionEntity[] = [
     description: 'Expansive mountain ranges draining into Kameng, Subansiri, Siang, and Dibang rivers. Severe slope instability during torrential cloudbursts along trans-Arunachal strategic highways and mountain passes.',
     dataSource: 'Border Roads Organisation (BRO Project Vartak & Brahmank)',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 42).toISOString(),
-    geometry: {
-      type: 'Polygon',
-      coordinates: [[
-        [91.6, 27.2],
-        [92.5, 27.0],
-        [93.5, 27.1],
-        [94.5, 27.5],
-        [95.5, 27.8],
-        [96.5, 28.0],
-        [97.2, 28.4],
-        [97.3, 28.9],
-        [96.5, 29.3],
-        [95.5, 29.4],
-        [94.5, 29.0],
-        [93.5, 28.5],
-        [92.0, 28.0],
-        [91.6, 27.5],
-        [91.6, 27.2]
-      ]]
-    },
-    bounds: [91.6, 27.0, 97.3, 29.4]
+    geometry: NE_GEOMETRIES['Arunachal Pradesh'] as RegionEntity['geometry'],
+    bounds: [91.5495, 26.6494, 97.4153, 29.4614]
   },
   {
     id: 'state-nagaland',
@@ -163,20 +99,8 @@ export const MOCK_REGIONS: RegionEntity[] = [
     description: 'Parallel folded ridges with clay-rich weathered horizons. Deep-seated structural creep, sinking zones (Pagla Pahar, Phesama), and mudslides along NH-2 corridor between Dimapur and Kohima.',
     dataSource: 'Nagaland NSDMA & Regional Remote Sensing Centre',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-    geometry: {
-      type: 'Polygon',
-      coordinates: [[
-        [93.4, 25.6],
-        [94.0, 25.5],
-        [94.8, 26.0],
-        [95.2, 26.8],
-        [94.8, 27.0],
-        [94.2, 26.5],
-        [93.8, 26.1],
-        [93.4, 25.6]
-      ]]
-    },
-    bounds: [93.4, 25.5, 95.2, 27.0]
+    geometry: NE_GEOMETRIES['Nagaland'] as RegionEntity['geometry'],
+    bounds: [93.3318, 25.1997, 95.2448, 27.0372]
   },
   {
     id: 'state-manipur',
@@ -195,20 +119,8 @@ export const MOCK_REGIONS: RegionEntity[] = [
     description: 'Central lacustrine plain surrounded by nine mountain ranges. Seasonal monsoonal rainfall triggers cut-slope washouts and major mudslides along NH-37 (Imphal-Jiribam corridor).',
     dataSource: 'Manipur State Disaster Management Authority & NESAC',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 85).toISOString(),
-    geometry: {
-      type: 'Polygon',
-      coordinates: [[
-        [93.1, 24.2],
-        [93.8, 23.8],
-        [94.4, 24.2],
-        [94.5, 25.2],
-        [94.0, 25.6],
-        [93.5, 25.5],
-        [93.2, 24.8],
-        [93.1, 24.2]
-      ]]
-    },
-    bounds: [93.1, 23.8, 94.5, 25.6]
+    geometry: NE_GEOMETRIES['Manipur'] as RegionEntity['geometry'],
+    bounds: [92.9725, 23.8368, 94.7485, 25.6916]
   },
   {
     id: 'state-mizoram',
@@ -227,19 +139,8 @@ export const MOCK_REGIONS: RegionEntity[] = [
     description: 'N-S trending anticlinal ridges with steep slope profiles. Urban slope instability around Aizawl and valley-corridor road cuts along NH-306 subject to monsoonal slips.',
     dataSource: 'Mizoram Disaster Management & MZU Geology Department',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 95).toISOString(),
-    geometry: {
-      type: 'Polygon',
-      coordinates: [[
-        [92.3, 22.0],
-        [93.0, 22.2],
-        [93.3, 23.0],
-        [93.2, 24.2],
-        [92.6, 24.4],
-        [92.2, 23.5],
-        [92.3, 22.0]
-      ]]
-    },
-    bounds: [92.2, 22.0, 93.3, 24.4]
+    geometry: NE_GEOMETRIES['Mizoram'] as RegionEntity['geometry'],
+    bounds: [92.2589, 21.9442, 93.4426, 24.5182]
   },
   {
     id: 'state-tripura',
@@ -258,19 +159,8 @@ export const MOCK_REGIONS: RegionEntity[] = [
     description: 'Low undulating hills (Jampui, Sakhan ranges) and synclinal river valleys. Isolated cut-slope slips occur on vulnerable road corridors during extreme cyclonic depressions.',
     dataSource: 'Tripura Disaster Management Authority',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
-    geometry: {
-      type: 'Polygon',
-      coordinates: [[
-        [91.2, 23.0],
-        [91.8, 23.0],
-        [92.2, 23.5],
-        [92.3, 24.3],
-        [91.8, 24.2],
-        [91.2, 23.8],
-        [91.2, 23.0]
-      ]]
-    },
-    bounds: [91.2, 23.0, 92.3, 24.3]
+    geometry: NE_GEOMETRIES['Tripura'] as RegionEntity['geometry'],
+    bounds: [91.1548, 22.9444, 92.3366, 24.5247]
   }
 ];
 

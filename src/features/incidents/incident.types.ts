@@ -5,7 +5,9 @@ export type IncidentTrigger =
   | 'cloudburst' 
   | 'slope_cut_construction' 
   | 'earthquake_induced' 
-  | 'river_bank_erosion';
+  | 'river_bank_erosion'
+  | 'continuous_rain'
+  | 'unknown';
 
 export interface IncidentRecord {
   id: string;
@@ -21,4 +23,6 @@ export interface IncidentRecord {
   status: 'resolved' | 'monitoring' | 'debris_cleared';
   verified: boolean;
   dataSource: string;
+  elevationM?: number;
+  slopeDeg?: number;
 }

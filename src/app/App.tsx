@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { AppHeader } from '../components/layout/AppHeader';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
+import type { RegionalMapHandle } from '../components/map/RegionalMap';
 import { useRegionSelection } from '../hooks/useRegionSelection';
 import { dataProvider } from '../api/dataProvider';
 import type { IncidentRecord } from '../features/incidents/incident.types';
@@ -10,6 +11,7 @@ import type { WarningRecord } from '../features/warnings/warning.types';
 
 export const App: React.FC = () => {
   const regionState = useRegionSelection();
+  const mapHandleRef = useRef<RegionalMapHandle>(null);
 
   const [incidents, setIncidents] = useState<IncidentRecord[]>([]);
   const [stations, setStations] = useState<MonitoringStation[]>([]);
@@ -53,9 +55,8 @@ export const App: React.FC = () => {
     if (regionState.selectedRegion) {
       regionState.clearSelection();
     }
-    // Dispatch camera reset to MapLibre instance
-    const resetBtn = document.querySelector('.maplibregl-ctrl-compass') as HTMLButtonElement;
-    if (resetBtn) resetBtn.click();
+    // Fly the camera back to the opening view of the Northeast
+    mapHandleRef.current?.resetView();
   }, [regionState]);
 
   return (
@@ -69,7 +70,7 @@ export const App: React.FC = () => {
         onToggleLayersModal={() => setIsLayersModalOpen(true)}
         onOpenAboutModal={() => setIsAboutModalOpen(true)}
         selectedRegion={regionState.selectedRegion}
-        activeWarningCount={activeWarnings.length}
+        warnings={activeWarnings}
       />
 
       {/* Main Geospatial Command Center Layout */}
@@ -83,6 +84,7 @@ export const App: React.FC = () => {
         onCloseLayersModal={() => setIsLayersModalOpen(false)}
         onCloseAboutModal={() => setIsAboutModalOpen(false)}
         onResetCamera={handleResetCamera}
+        mapHandleRef={mapHandleRef}
       />
     </div>
   );

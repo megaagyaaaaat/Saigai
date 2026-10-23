@@ -9,13 +9,13 @@ export default {
     extend: {
       colors: {
         ner: {
-          bg: '#080D14',
-          surface: '#0E1621',
-          panel: '#111C29',
-          border: '#253443',
-          'border-light': '#32475B',
-          text: '#EDF4FA',
-          muted: '#96A8BA',
+          bg: '#0a0a0b',
+          surface: '#121214',
+          panel: '#171719',
+          border: '#2b2b30',
+          'border-light': '#3b3b42',
+          text: '#f4f4f5',
+          muted: '#a1a1aa',
           cyan: '#64E2E8',
           blue: '#64A8FF',
           amber: '#F59E0B',

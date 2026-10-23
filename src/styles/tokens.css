@@ -1,13 +1,13 @@
 :root {
   /* NER-LEWS Master Design Tokens */
-  --ner-bg: #080D14;
-  --ner-surface: #0E1621;
-  --ner-panel: #111C29;
-  --ner-border: #253443;
-  --ner-border-light: #32475B;
+  --ner-bg: #0a0a0b;
+  --ner-surface: #121214;
+  --ner-panel: #171719;
+  --ner-border: #2b2b30;
+  --ner-border-light: #3b3b42;
 
-  --ner-text: #EDF4FA;
-  --ner-muted: #96A8BA;
+  --ner-text: #f4f4f5;
+  --ner-muted: #a1a1aa;
   --ner-faint: #4E6173;
 
   --ner-cyan: #64E2E8;

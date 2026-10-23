@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import type { RegionEntity } from '../../features/regions/region.types';
 import { MOCK_REGIONS } from '../../data/mockRegions';
+import type { WarningRecord } from '../../features/warnings/warning.types';
 
 interface AppHeaderProps {
   onSelectRegion: (region: RegionEntity) => void;
@@ -21,7 +22,7 @@ interface AppHeaderProps {
   onToggleLayersModal: () => void;
   onOpenAboutModal: () => void;
   selectedRegion?: RegionEntity | null;
-  activeWarningCount: number;
+  warnings: WarningRecord[];
 }
 
 const NE_STATES = [
@@ -43,8 +44,11 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onToggleLayersModal,
   onOpenAboutModal,
   selectedRegion,
-  activeWarningCount,
+  warnings,
 }) => {
+  const activeWarningCount = warnings.length;
+  const [isAlertsOpen, setIsAlertsOpen] = useState(false);
+  const alertsRef = useRef<HTMLDivElement>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchResults, setSearchResults] = useState<RegionEntity[]>([]);
@@ -72,6 +76,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
         setIsSearchOpen(false);
       }
+      if (alertsRef.current && !alertsRef.current.contains(e.target as Node)) {
+        setIsAlertsOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -84,41 +91,15 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   };
 
   return (
-    <header className="bg-ner-panel/90 backdrop-blur-md border-b border-ner-border px-4 lg:px-6 py-2.5 flex items-center justify-between z-30 select-none relative min-h-[4rem]">
+    <header className="bg-ner-bg border-b border-ner-border/60 px-4 lg:px-6 py-2 flex items-center justify-between gap-4 z-30 select-none relative min-h-[3.25rem]">
       {/* Brand Identity */}
-      <div className="flex items-center gap-3">
-        <div className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-ner-surface border border-ner-border shadow-panel">
-          <Radar className="w-5 h-5 text-ner-cyan animate-pulse" />
-          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-ner-cyan animate-ping opacity-75" />
-          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-ner-cyan" />
-        </div>
-
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="font-mono text-base font-bold tracking-wider text-ner-text">
-              NER-LEWS
-            </h1>
-            <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-ner-cyan/15 text-ner-cyan border border-ner-cyan/30">
-              v1.0-RC
-            </span>
-            {selectedRegion ? (
-              <span className="hidden lg:inline-flex text-[10px] font-mono px-2 py-0.5 rounded bg-ner-cyan/10 border border-ner-cyan/30 text-ner-cyan truncate max-w-[200px]">
-                STATE: {selectedRegion.name}
-              </span>
-            ) : (
-              <span className="hidden md:inline-flex text-[10px] font-mono px-1.5 py-0.5 rounded bg-ner-surface border border-ner-border text-ner-muted">
-                8 STATES GIS
-              </span>
-            )}
-          </div>
-          <p className="text-[11px] text-ner-muted hidden sm:block">
-            Northeast India Landslide Early Warning System
-          </p>
-        </div>
+      <div className="flex items-center gap-2.5 shrink-0">
+        <Radar className="w-5 h-5 text-ner-cyan" />
+        <h1 className="font-mono text-sm font-semibold tracking-widest text-ner-text">NER-LEWS</h1>
       </div>
 
       {/* Center: Search & Quick State Selection */}
-      <div className="flex-1 max-w-xl mx-4 flex flex-col gap-1.5" ref={searchRef}>
+      <div className="flex-1 max-w-xl flex flex-col gap-1.5" ref={searchRef}>
         <div className="relative">
           <Search className="w-4 h-4 text-ner-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
@@ -129,8 +110,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               setIsSearchOpen(true);
             }}
             onFocus={() => setIsSearchOpen(true)}
-            placeholder="Search 8 Northeast States (Assam, Sikkim, Meghalaya...)"
-            className="w-full bg-ner-surface/80 border border-ner-border rounded-lg pl-9 pr-8 py-1.5 text-xs text-ner-text placeholder-ner-muted/60 ner-focus transition-all duration-200"
+            placeholder="Search states"
+            className="w-full bg-ner-surface border border-transparent hover:border-ner-border rounded-lg pl-9 pr-8 py-1.5 text-xs text-ner-text placeholder-ner-muted/60 ner-focus transition-all duration-200"
           />
           {searchQuery && (
             <button
@@ -146,8 +127,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         </div>
 
         {/* Quick State Pills */}
-        <div className="hidden md:flex items-center gap-1.5 overflow-x-auto text-[10px] font-mono py-0.5">
-          <span className="text-ner-muted uppercase tracking-wider text-[9px] mr-1 shrink-0">States:</span>
+        <div className="hidden md:flex items-center gap-1 overflow-x-auto text-[11px] font-mono">
           {NE_STATES.map((st) => {
             const isSelected = selectedRegion?.name.toLowerCase() === st.name.toLowerCase() || selectedRegion?.id === st.id;
             return (
@@ -157,10 +137,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                   const match = MOCK_REGIONS.find((r) => r.id === st.id || r.name.toLowerCase().includes(st.name.toLowerCase()));
                   if (match) onSelectRegion(match);
                 }}
-                className={`px-2 py-0.5 rounded transition-all shrink-0 border ${
+                className={`px-2 py-0.5 rounded-md transition-colors shrink-0 ${
                   isSelected
-                    ? 'bg-ner-cyan text-ner-bg border-ner-cyan font-bold shadow-glow-cyan'
-                    : 'bg-ner-surface/70 text-ner-muted hover:text-ner-cyan hover:border-ner-cyan/40 border-ner-border/60'
+                    ? 'bg-ner-cyan/15 text-ner-cyan font-semibold'
+                    : 'text-ner-muted hover:text-ner-text'
                 }`}
               >
                 {st.name}
@@ -203,58 +183,94 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       </div>
 
       {/* Right Action Controls */}
-      <div className="flex items-center gap-2">
-        {/* Draw Custom Polygon Mode Toggle */}
+      <div className="flex items-center gap-1 shrink-0">
         <button
           onClick={onToggleDrawingMode}
-          title={isDrawingMode ? 'Cancel Region Drawing' : 'Draw Custom Geographic Polygon'}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono font-medium transition-all ner-focus ${
+          title={isDrawingMode ? 'Cancel Region Drawing' : 'Draw Region'}
+          aria-label="Draw region"
+          className={`p-2 rounded-lg transition-colors ner-focus ${
             isDrawingMode
-              ? 'bg-ner-cyan text-ner-bg border-ner-cyan shadow-glow-cyan font-bold'
-              : 'bg-ner-surface border-ner-border text-ner-cyan hover:bg-ner-surface/80 hover:border-ner-cyan/40'
+              ? 'bg-ner-cyan text-ner-bg'
+              : 'text-ner-muted hover:text-ner-text hover:bg-ner-surface'
           }`}
         >
-          <PenTool className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">
-            {isDrawingMode ? 'Drawing Active' : 'Draw Region'}
-          </span>
+          <PenTool className="w-4 h-4" />
         </button>
 
-        {/* Reset Camera Viewport */}
         <button
           onClick={onResetCamera}
-          title="Reset Viewport to Northeast India Extent"
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-ner-surface border border-ner-border text-xs text-ner-muted hover:text-ner-text hover:border-ner-border-light transition-colors ner-focus"
+          title="Reset Frame"
+          aria-label="Reset frame"
+          className="p-2 rounded-lg text-ner-muted hover:text-ner-text hover:bg-ner-surface transition-colors ner-focus"
         >
-          <Compass className="w-3.5 h-3.5" />
-          <span className="hidden lg:inline font-mono">Reset Frame</span>
+          <Compass className="w-4 h-4" />
         </button>
 
-        {/* Map Layers Toggle */}
         <button
           onClick={onToggleLayersModal}
-          title="Configure Map Overlays and Imagery"
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-ner-surface border border-ner-border text-xs text-ner-muted hover:text-ner-text hover:border-ner-border-light transition-colors ner-focus"
+          title="Layers"
+          aria-label="Layers"
+          className="p-2 rounded-lg text-ner-muted hover:text-ner-text hover:bg-ner-surface transition-colors ner-focus"
         >
-          <Layers className="w-3.5 h-3.5" />
-          <span className="hidden lg:inline font-mono">Layers</span>
+          <Layers className="w-4 h-4" />
         </button>
 
-        {/* Active Emergency Warnings Badge */}
         {activeWarningCount > 0 && (
-          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-ner-red/15 border border-ner-red/30 text-ner-red text-xs font-mono animate-pulse">
-            <AlertOctagon className="w-3.5 h-3.5 text-ner-red" />
-            <span className="font-bold">{activeWarningCount}</span>
-            <span className="hidden xl:inline">Alerts</span>
+          <div className="relative" ref={alertsRef}>
+            <button
+              onClick={() => setIsAlertsOpen((o) => !o)}
+              title="Active alerts"
+              aria-label="Active alerts"
+              aria-expanded={isAlertsOpen}
+              className="flex items-center gap-1.5 ml-1 px-2 py-1.5 rounded-lg bg-ner-red/10 hover:bg-ner-red/20 text-ner-red text-xs font-mono transition-colors ner-focus"
+            >
+              <AlertOctagon className="w-3.5 h-3.5" />
+              <span className="font-semibold">{activeWarningCount}</span>
+            </button>
+
+            {isAlertsOpen && (
+              <div className="absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto bg-ner-panel border border-ner-border rounded-xl shadow-panel z-50">
+                <div className="px-3 py-2 border-b border-ner-border/60 text-[10px] font-mono text-ner-muted uppercase tracking-wider">
+                  Active alerts ({activeWarningCount})
+                </div>
+                {warnings.map((w) => {
+                  // backend ids look like "state-meghalaya"; the app's own ids differ for a couple of states
+                  const tail = w.regionId.replace(/^state-/, '');
+                  const region = MOCK_REGIONS.find(
+                    (r) => r.id === w.regionId || r.name.toLowerCase().replace(/\s+/g, '-') === tail
+                  );
+                  return (
+                    <button
+                      key={w.id}
+                      disabled={!region}
+                      onClick={() => {
+                        if (region) {
+                          onSelectRegion(region);
+                          setIsAlertsOpen(false);
+                        }
+                      }}
+                      className="w-full text-left px-3 py-2.5 border-b border-ner-border/30 last:border-none hover:bg-ner-surface disabled:hover:bg-transparent disabled:cursor-default transition-colors"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-mono font-bold uppercase text-ner-red">{w.level}</span>
+                        <span className="text-[10px] font-mono text-ner-muted truncate">
+                          {region ? region.name : w.affectedCorridor}
+                        </span>
+                      </div>
+                      <p className="text-xs text-ner-text mt-0.5 leading-snug">{w.title}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
 
-        {/* About System Modal Trigger */}
         <button
           onClick={onOpenAboutModal}
-          title="About NER-LEWS Platform & Methodology"
-          className="p-1.5 rounded-lg bg-ner-surface border border-ner-border text-ner-muted hover:text-ner-text hover:border-ner-border-light transition-colors ner-focus"
+          title="About"
           aria-label="About platform"
+          className="p-2 rounded-lg text-ner-muted hover:text-ner-text hover:bg-ner-surface transition-colors ner-focus"
         >
           <Info className="w-4 h-4" />
         </button>

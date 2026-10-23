@@ -3,6 +3,7 @@ import type { RegionDetailData } from '../../hooks/useRegionSelection';
 import { Badge } from '../ui/Badge';
 import { IncidentTimeline } from './IncidentTimeline';
 import { HistoricalCharts } from './HistoricalCharts';
+import { useRecentRainfall } from '../../hooks/useRecentRainfall';
 import { 
   X, 
   Droplets, 
@@ -25,6 +26,9 @@ type TabType = 'overview' | 'incidents' | 'charts' | 'sensors' | 'warnings';
 export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, onClose }) => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const { region, incidents, rainfallSeries, warnings, stations } = data;
+
+  const [minLng0, minLat0, maxLng0, maxLat0] = region.bounds || [91.0, 25.0, 93.0, 26.0];
+  const recentRain = useRecentRainfall((minLat0 + maxLat0) / 2, (minLng0 + maxLng0) / 2);
 
   const [liveWeather, setLiveWeather] = useState<{
     tempC?: number;
@@ -83,9 +87,9 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
   }, [region.id, region.bounds]);
 
   return (
-    <div className="w-full flex-1 flex flex-col bg-ner-panel/95 backdrop-blur-md select-none overflow-hidden h-full">
+    <div className="w-full flex-1 flex flex-col bg-transparent select-none overflow-hidden h-full">
       {/* Header Bar */}
-      <div className="p-4 border-b border-ner-border flex items-center justify-between gap-3 bg-ner-surface/50">
+      <div className="px-6 py-5 border-b border-ner-border/60 flex items-center justify-between gap-3 bg-[#18181b]">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 mb-1 flex-wrap">
             <span className="text-[10px] font-mono text-ner-muted uppercase tracking-wider">
@@ -118,23 +122,28 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
       </div>
 
       {/* KPI Metric Summary Strip (4 Clean Cards) */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-3 bg-ner-surface/20 border-b border-ner-border/40 text-xs">
+      <div className="grid grid-cols-2 gap-3 px-6 py-5 border-b border-ner-border/40 text-xs">
         {/* Rainfall */}
-        <div className="bg-ner-surface/60 rounded-xl p-2.5 border border-ner-border flex flex-col justify-between">
+        <div className="bg-[#18181b] rounded-xl p-3.5 border border-ner-border flex flex-col justify-between gap-1">
           <div className="flex items-center justify-between text-[11px] font-mono text-ner-muted mb-1">
-            <span>72h Rain</span>
+            <span>{recentRain.live ? '7-Day Rain' : '72h Rain'}</span>
             <Droplets className="w-3.5 h-3.5 text-ner-cyan" />
           </div>
           <div className="font-mono font-bold text-sm text-ner-cyan">
-            {region.avgRainfall72h} <span className="text-[10px] text-ner-muted font-normal">mm</span>
+            {recentRain.live ? recentRain.last7DaysMm : region.avgRainfall72h}{' '}
+            <span className="text-[10px] text-ner-muted font-normal">mm</span>
           </div>
-          <div className="text-[9px] text-ner-muted mt-0.5 font-mono truncate">
-            {region.avgRainfall72h > 200 ? 'Heavy Monsoon' : 'Moderate'}
+          <div className="text-[10px] text-ner-muted mt-0.5 font-mono truncate">
+            {recentRain.live
+              ? `Peak day ${recentRain.peakDayMm} mm`
+              : recentRain.loading
+                ? 'Loading…'
+                : 'Estimate (offline)'}
           </div>
         </div>
 
         {/* Soil Saturation */}
-        <div className="bg-ner-surface/60 rounded-xl p-2.5 border border-ner-border flex flex-col justify-between">
+        <div className="bg-[#18181b] rounded-xl p-3.5 border border-ner-border flex flex-col justify-between gap-1">
           <div className="flex items-center justify-between text-[11px] font-mono text-ner-muted mb-1">
             <span>Saturation</span>
             <Activity className="w-3.5 h-3.5 text-ner-orange" />
@@ -142,13 +151,13 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
           <div className="font-mono font-bold text-sm text-ner-orange">
             {region.soilSaturationPercent}%
           </div>
-          <div className="text-[9px] text-ner-muted mt-0.5 font-mono truncate">
+          <div className="text-[10px] text-ner-muted mt-0.5 font-mono truncate">
             {region.soilSaturationPercent > 80 ? 'Near Capacity' : 'Stable Margin'}
           </div>
         </div>
 
         {/* Active Warnings */}
-        <div className="bg-ner-surface/60 rounded-xl p-2.5 border border-ner-border flex flex-col justify-between">
+        <div className="bg-[#18181b] rounded-xl p-3.5 border border-ner-border flex flex-col justify-between gap-1">
           <div className="flex items-center justify-between text-[11px] font-mono text-ner-muted mb-1">
             <span>Alerts</span>
             <AlertTriangle className="w-3.5 h-3.5 text-ner-red" />
@@ -156,13 +165,13 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
           <div className="font-mono font-bold text-sm text-ner-red">
             {warnings.length} Active
           </div>
-          <div className="text-[9px] text-ner-muted mt-0.5 font-mono truncate">
+          <div className="text-[10px] text-ner-muted mt-0.5 font-mono truncate">
             {warnings.length > 0 ? 'Advisory Active' : 'All Clear'}
           </div>
         </div>
 
         {/* Landslide Count */}
-        <div className="bg-ner-surface/60 rounded-xl p-2.5 border border-ner-border flex flex-col justify-between">
+        <div className="bg-[#18181b] rounded-xl p-3.5 border border-ner-border flex flex-col justify-between gap-1">
           <div className="flex items-center justify-between text-[11px] font-mono text-ner-muted mb-1">
             <span>Landslides</span>
             <Compass className="w-3.5 h-3.5 text-ner-emerald" />
@@ -170,17 +179,17 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
           <div className="font-mono font-bold text-sm text-ner-emerald">
             {region.historicalIncidentCount}
           </div>
-          <div className="text-[9px] text-ner-muted mt-0.5 font-mono truncate">
+          <div className="text-[10px] text-ner-muted mt-0.5 font-mono truncate">
             Cataloged Records
           </div>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center px-4 border-b border-ner-border/60 bg-ner-surface/30 overflow-x-auto gap-1">
+      <div className="flex items-center px-6 border-b border-ner-border/60 overflow-x-auto gap-2">
         <button
           onClick={() => setActiveTab('overview')}
-          className={`px-3 py-2 text-xs font-mono font-medium border-b-2 transition-colors whitespace-nowrap ${
+          className={`px-3 py-3 text-xs font-mono font-medium border-b-2 transition-colors whitespace-nowrap ${
             activeTab === 'overview'
               ? 'border-ner-cyan text-ner-cyan font-bold'
               : 'border-transparent text-ner-muted hover:text-ner-text'
@@ -190,7 +199,7 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
         </button>
         <button
           onClick={() => setActiveTab('incidents')}
-          className={`px-3 py-2 text-xs font-mono font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-1.5 ${
+          className={`px-3 py-3 text-xs font-mono font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-1.5 ${
             activeTab === 'incidents'
               ? 'border-ner-cyan text-ner-cyan font-bold'
               : 'border-transparent text-ner-muted hover:text-ner-text'
@@ -203,7 +212,7 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
         </button>
         <button
           onClick={() => setActiveTab('charts')}
-          className={`px-3 py-2 text-xs font-mono font-medium border-b-2 transition-colors whitespace-nowrap ${
+          className={`px-3 py-3 text-xs font-mono font-medium border-b-2 transition-colors whitespace-nowrap ${
             activeTab === 'charts'
               ? 'border-ner-cyan text-ner-cyan font-bold'
               : 'border-transparent text-ner-muted hover:text-ner-text'
@@ -213,7 +222,7 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
         </button>
         <button
           onClick={() => setActiveTab('sensors')}
-          className={`px-3 py-2 text-xs font-mono font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-1.5 ${
+          className={`px-3 py-3 text-xs font-mono font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-1.5 ${
             activeTab === 'sensors'
               ? 'border-ner-cyan text-ner-cyan font-bold'
               : 'border-transparent text-ner-muted hover:text-ner-text'
@@ -226,7 +235,7 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
         </button>
         <button
           onClick={() => setActiveTab('warnings')}
-          className={`px-3 py-2 text-xs font-mono font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-1.5 ${
+          className={`px-3 py-3 text-xs font-mono font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-1.5 ${
             activeTab === 'warnings'
               ? 'border-ner-red text-ner-red font-bold'
               : 'border-transparent text-ner-muted hover:text-ner-text'
@@ -242,24 +251,24 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
       </div>
 
       {/* Tab Contents */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
         {/* TAB 1: STATE OVERVIEW */}
         {activeTab === 'overview' && (
-          <div className="space-y-4 text-xs">
+          <div className="space-y-6 text-xs">
             {/* Live Meteorological Feed Card */}
-            <div className="bg-gradient-to-br from-ner-surface/80 to-ner-surface/40 rounded-xl p-4 border border-ner-cyan/30 shadow-panel">
+            <div className="bg-gradient-to-br from-[#1b1b1f] to-[#18181b] rounded-xl p-5 border border-ner-cyan/30 shadow-panel">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[10px] font-mono text-ner-cyan uppercase tracking-wider flex items-center gap-1.5">
                   <CloudRain className="w-3.5 h-3.5 text-ner-cyan" />
                   <span>Real-Time Weather Telemetry</span>
                 </span>
-                <span className="text-[9px] font-mono text-ner-muted">
+                <span className="text-[10px] font-mono text-ner-muted">
                   Open-Meteo & IMD AWS
                 </span>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 my-2">
-                <div className="p-2.5 rounded-lg bg-ner-panel/80 border border-ner-border">
+                <div className="p-2.5 rounded-lg bg-ner-panel border border-ner-border">
                   <span className="text-[10px] font-mono text-ner-muted flex items-center gap-1">
                     <Thermometer className="w-3 h-3 text-ner-cyan" />
                     Temp
@@ -269,7 +278,7 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
                   </p>
                 </div>
 
-                <div className="p-2.5 rounded-lg bg-ner-panel/80 border border-ner-border">
+                <div className="p-2.5 rounded-lg bg-ner-panel border border-ner-border">
                   <span className="text-[10px] font-mono text-ner-muted flex items-center gap-1">
                     <Droplets className="w-3 h-3 text-ner-cyan" />
                     Humidity
@@ -279,7 +288,7 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
                   </p>
                 </div>
 
-                <div className="p-2.5 rounded-lg bg-ner-panel/80 border border-ner-border col-span-2 sm:col-span-1">
+                <div className="p-2.5 rounded-lg bg-ner-panel border border-ner-border col-span-2 sm:col-span-1">
                   <span className="text-[10px] font-mono text-ner-muted flex items-center gap-1">
                     <Wind className="w-3 h-3 text-ner-cyan" />
                     24h Precip
@@ -297,11 +306,11 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
             </div>
 
             {/* Geological Characterization */}
-            <div className="bg-ner-surface/60 rounded-xl p-4 border border-ner-border">
-              <h4 className="font-mono text-xs font-semibold text-ner-cyan uppercase tracking-wider mb-2">
+            <div className="bg-[#18181b] rounded-xl p-5 border border-ner-border">
+              <h4 className="font-mono text-xs font-semibold text-ner-cyan uppercase tracking-wider mb-3">
                 Terrain & Environmental Context
               </h4>
-              <p className="text-ner-text leading-relaxed mb-4 text-[11px]">
+              <p className="text-ner-text leading-relaxed mb-5 text-xs">
                 {region.description}
               </p>
 
@@ -324,21 +333,25 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
 
         {/* TAB 3: CHARTS */}
         {activeTab === 'charts' && (
-          <HistoricalCharts rainfallSeries={rainfallSeries} incidents={incidents} />
+          <HistoricalCharts
+            rainfallSeries={recentRain.live ? recentRain.series : rainfallSeries}
+            rainfallIsLive={recentRain.live}
+            incidents={incidents}
+          />
         )}
 
         {/* TAB 4: SENSORS */}
         {activeTab === 'sensors' && (
           <div className="space-y-3">
             {stations.length === 0 ? (
-              <div className="text-center py-8 text-ner-muted text-xs font-mono bg-ner-surface/30 rounded-xl border border-ner-border/40">
+              <div className="text-center py-8 text-ner-muted text-xs font-mono bg-[#18181b] rounded-xl border border-ner-border/40">
                 No telemetry stations deployed inside this state boundary.
               </div>
             ) : (
               stations.map((stn) => (
                 <div
                   key={stn.id}
-                  className="bg-ner-surface/60 rounded-xl p-3.5 border border-ner-border flex items-start justify-between gap-3 text-xs"
+                  className="bg-[#18181b] rounded-xl p-3.5 border border-ner-border flex items-start justify-between gap-3 text-xs"
                 >
                   <div>
                     <div className="flex items-center gap-2 mb-1">
@@ -363,14 +376,14 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
         {activeTab === 'warnings' && (
           <div className="space-y-3">
             {warnings.length === 0 ? (
-              <div className="text-center py-8 text-ner-muted text-xs font-mono bg-ner-surface/30 rounded-xl border border-ner-border/40">
+              <div className="text-center py-8 text-ner-muted text-xs font-mono bg-[#18181b] rounded-xl border border-ner-border/40">
                 No active warnings currently in effect for this state.
               </div>
             ) : (
               warnings.map((w) => (
                 <div
                   key={w.id}
-                  className="p-3.5 rounded-xl bg-ner-surface/70 border border-ner-red/40 flex flex-col gap-1.5 text-xs"
+                  className="p-3.5 rounded-xl bg-[#18181b] border border-ner-red/40 flex flex-col gap-1.5 text-xs"
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-[10px] text-ner-red font-bold uppercase tracking-wider">

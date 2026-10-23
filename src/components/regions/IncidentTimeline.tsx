@@ -36,7 +36,7 @@ export const IncidentTimeline: React.FC<IncidentTimelineProps> = ({ incidents })
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
             placeholder="Search records, highways..."
-            className="w-full bg-ner-surface/70 border border-ner-border rounded-lg pl-8 pr-3 py-1 text-xs text-ner-text placeholder-ner-muted/60 ner-focus"
+            className="w-full bg-[#18181b] border border-ner-border rounded-lg pl-8 pr-3 py-1 text-xs text-ner-text placeholder-ner-muted/60 ner-focus"
           />
         </div>
 
@@ -59,7 +59,7 @@ export const IncidentTimeline: React.FC<IncidentTimelineProps> = ({ incidents })
 
       {/* Incident List */}
       {filtered.length === 0 ? (
-        <div className="text-center py-8 text-ner-muted text-xs font-mono bg-ner-surface/30 rounded-xl border border-ner-border/40">
+        <div className="text-center py-8 text-ner-muted text-xs font-mono bg-[#18181b] rounded-xl border border-ner-border/40">
           No historical landslide events match the criteria for this region.
         </div>
       ) : (
@@ -67,7 +67,7 @@ export const IncidentTimeline: React.FC<IncidentTimelineProps> = ({ incidents })
           {filtered.map((inc) => (
             <div
               key={inc.id}
-              className="relative bg-ner-surface/60 rounded-xl p-3.5 border border-ner-border hover:border-ner-cyan/40 transition-colors group"
+              className="relative bg-[#18181b] rounded-xl p-3.5 border border-ner-border hover:border-ner-cyan/40 transition-colors group"
             >
               {/* Timeline marker node */}
               <span
@@ -115,7 +115,7 @@ export const IncidentTimeline: React.FC<IncidentTimelineProps> = ({ incidents })
                 </div>
               )}
 
-              <div className="mt-2 pt-2 border-t border-ner-border/30 text-[9px] font-mono text-ner-muted flex justify-between items-center">
+              <div className="mt-2 pt-2 border-t border-ner-border/30 text-[10px] font-mono text-ner-muted flex justify-between items-center">
                 <span>Source: {inc.dataSource}</span>
                 <span className="text-ner-emerald">✓ Verified Record</span>
               </div>
