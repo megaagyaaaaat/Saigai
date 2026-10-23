@@ -121,9 +121,9 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
               visibility: layers.showSatellite ? 'visible' : 'none',
             },
             paint: {
-              'raster-brightness-max': 0.88,
-              'raster-contrast': 0.1,
-              'raster-saturation': -0.15, // Cinematic toned-down satellite look
+              'raster-brightness-max': 0.7,
+              'raster-contrast': 0.15,
+              'raster-saturation': -0.4, // Muted, darker basemap so overlays stand out
             },
           },
         ],
@@ -189,10 +189,10 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
           'fill-opacity': [
             'case',
             ['boolean', ['feature-state', 'selected'], false],
-            0.45,
+            0.36,
             ['boolean', ['feature-state', 'hover'], false],
-            0.32,
-            0.18,
+            0.24,
+            0.12,
           ],
         },
       });
@@ -202,6 +202,7 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
         id: 'regions-stroke',
         type: 'line',
         source: 'regions-src',
+        layout: { 'line-join': 'round' },
         paint: {
           'line-color': [
             'case',
@@ -221,12 +222,12 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
           'line-width': [
             'case',
             ['boolean', ['feature-state', 'selected'], false],
-            3.2,
+            2.8,
             ['boolean', ['feature-state', 'hover'], false],
-            2.4,
-            1.5,
+            2,
+            1.1,
           ],
-          'line-opacity': 0.9,
+          'line-opacity': 0.8,
         },
       });
 
@@ -342,9 +343,9 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
         type: 'circle',
         source: 'stations-src',
         paint: {
-          'circle-radius': 6,
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, 3, 8, 4.5, 12, 7],
           'circle-color': '#64E2E8',
-          'circle-stroke-width': 2,
+          'circle-stroke-width': 1.5,
           'circle-stroke-color': '#0E1621',
           'circle-opacity': 0.95,
         },
@@ -364,10 +365,11 @@ export const RegionalMap = forwardRef<RegionalMapHandle, RegionalMapProps>(({
         type: 'circle',
         source: 'waypoints-src',
         paint: {
-          'circle-radius': 5,
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, 3, 8, 4, 12, 6],
           'circle-color': '#64A8FF',
-          'circle-stroke-width': 1.5,
+          'circle-stroke-width': 1,
           'circle-stroke-color': '#FFFFFF',
+          'circle-stroke-opacity': 0.8,
           'circle-opacity': 0.9,
         },
       });

@@ -1,7 +1,10 @@
-import React from 'react';
-import { 
-  Plus, 
+import React, { useState } from 'react';
+import {
+  ChevronDown,
+  ChevronUp,
+  Plus,
   Minus, 
+  Navigation,
   Compass, 
   Layers, 
   Eye, 
@@ -41,59 +44,92 @@ export const MapControls: React.FC<MapControlsProps> = ({
   layers,
   onToggleLayer,
 }) => {
+  const [isNavOpen, setIsNavOpen] = useState(true);
+  const [isOverlaysOpen, setIsOverlaysOpen] = useState(true);
+
   return (
     <div className="absolute top-20 right-6 z-20 flex flex-col gap-3 select-none">
       {/* Zoom and Navigation Controls */}
-      <div className="bg-ner-panel/90 backdrop-blur-md border border-ner-border rounded-xl shadow-panel overflow-hidden flex flex-col p-1 gap-1">
+      <div className="bg-ner-panel/90 backdrop-blur-md border border-ner-border rounded-xl shadow-panel p-2 flex flex-col gap-1.5 w-48 text-xs">
         <button
-          onClick={onZoomIn}
-          title="Zoom In"
-          className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-ner-surface text-ner-text hover:text-ner-cyan transition-colors ner-focus"
-          aria-label="Zoom in"
-        >
-          <Plus className="w-4 h-4" />
-        </button>
-
-        <button
-          onClick={onZoomOut}
-          title="Zoom Out"
-          className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-ner-surface text-ner-text hover:text-ner-cyan transition-colors ner-focus"
-          aria-label="Zoom out"
-        >
-          <Minus className="w-4 h-4" />
-        </button>
-
-        <div className="h-px bg-ner-border my-0.5" />
-
-        <button
-          onClick={onTogglePitch}
-          title={isPitchActive ? 'Switch to 2D Top View' : 'Switch to 3D Angled View (45°)'}
-          className={`w-9 h-9 flex items-center justify-center rounded-lg font-mono text-xs font-bold transition-colors ner-focus ${
-            isPitchActive
-              ? 'bg-ner-cyan/20 text-ner-cyan border border-ner-cyan/40'
-              : 'hover:bg-ner-surface text-ner-muted hover:text-ner-text'
+          onClick={() => setIsNavOpen((o) => !o)}
+          aria-expanded={isNavOpen}
+          aria-label={isNavOpen ? 'Minimize navigation controls' : 'Expand navigation controls'}
+          className={`w-full text-[10px] font-mono text-ner-muted hover:text-ner-text uppercase px-1 flex items-center justify-between transition-colors ${
+            isNavOpen ? 'pb-1 border-b border-ner-border/40' : ''
           }`}
-          aria-label="Toggle 3D Perspective"
         >
-          {isPitchActive ? '3D' : '2D'}
+          <span className="flex items-center gap-1.5">
+            <Navigation className="w-3 h-3 text-ner-cyan" />
+            <span>Navigation</span>
+          </span>
+          {isNavOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </button>
 
-        <button
-          onClick={onResetNorth}
-          title="Reset Orientation North"
-          className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-ner-surface text-ner-muted hover:text-ner-text transition-colors ner-focus"
-          aria-label="Reset North"
-        >
-          <Compass className="w-4 h-4" />
-        </button>
+        {isNavOpen && (
+          <div className="flex items-center justify-between gap-1">
+            <button
+              onClick={onZoomIn}
+              title="Zoom In"
+              className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-ner-surface text-ner-text hover:text-ner-cyan transition-colors ner-focus"
+              aria-label="Zoom in"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={onZoomOut}
+              title="Zoom Out"
+              className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-ner-surface text-ner-text hover:text-ner-cyan transition-colors ner-focus"
+              aria-label="Zoom out"
+            >
+              <Minus className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={onTogglePitch}
+              title={isPitchActive ? 'Switch to 2D Top View' : 'Switch to 3D Angled View (45°)'}
+              className={`w-9 h-9 flex items-center justify-center rounded-lg font-mono text-xs font-bold transition-colors ner-focus ${
+                isPitchActive
+                  ? 'bg-ner-cyan/20 text-ner-cyan border border-ner-cyan/40'
+                  : 'hover:bg-ner-surface text-ner-muted hover:text-ner-text'
+              }`}
+              aria-label="Toggle 3D Perspective"
+            >
+              {isPitchActive ? '3D' : '2D'}
+            </button>
+
+            <button
+              onClick={onResetNorth}
+              title="Reset Orientation North"
+              className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-ner-surface text-ner-muted hover:text-ner-text transition-colors ner-focus"
+              aria-label="Reset North"
+            >
+              <Compass className="w-4 h-4" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Quick Layer Switchers */}
       <div className="bg-ner-panel/90 backdrop-blur-md border border-ner-border rounded-xl shadow-panel p-2 flex flex-col gap-1.5 w-48 text-xs">
-        <div className="text-[10px] font-mono text-ner-muted uppercase px-1 pb-1 border-b border-ner-border/40 flex items-center justify-between">
-          <span>Map Overlays</span>
-          <Layers className="w-3 h-3 text-ner-cyan" />
-        </div>
+        <button
+          onClick={() => setIsOverlaysOpen((o) => !o)}
+          aria-expanded={isOverlaysOpen}
+          aria-label={isOverlaysOpen ? 'Minimize map overlays' : 'Expand map overlays'}
+          className={`w-full text-[10px] font-mono text-ner-muted hover:text-ner-text uppercase px-1 flex items-center justify-between transition-colors ${
+            isOverlaysOpen ? 'pb-1 border-b border-ner-border/40' : ''
+          }`}
+        >
+          <span className="flex items-center gap-1.5">
+            <Layers className="w-3 h-3 text-ner-cyan" />
+            <span>Map Overlays</span>
+          </span>
+          {isOverlaysOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+        </button>
+
+        {isOverlaysOpen && (
+          <>
 
         {/* Satellite Imagery Basemap Toggle */}
         <button
@@ -194,6 +230,8 @@ export const MapControls: React.FC<MapControlsProps> = ({
             <EyeOff className="w-3 h-3 text-ner-muted" />
           )}
         </button>
+          </>
+        )}
       </div>
     </div>
   );
