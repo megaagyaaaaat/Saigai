@@ -33,13 +33,14 @@ export class MockStationService implements StationService {
         id: `stn-${regionId}-01`,
         name: 'State Meteorological & InSAR Ground Station',
         regionId,
-        type: 'weather_radar',
+        type: 'DOPPLER_RADAR',
         coordinates: [92.0, 26.0],
         elevationM: 1450,
-        status: 'online',
+        status: 'operational',
         batteryPercent: 96,
         lastTransmission: new Date().toISOString(),
-      }
+        sensorsActive: ['Doppler Radar', 'Rain Gauge'],
+      },
     ];
   }
 

@@ -28,14 +28,17 @@ export class MockRainfallService implements RainfallService {
       {
         id: `rain-${regionId}-default`,
         regionId,
+        stationId: `rain-station-${regionId}`,
         stationName: 'State Doppler Telemetry Station',
         coordinates: [92.0, 26.0],
-        past24hMm: 45.2,
-        past72hMm: 165.4,
-        cumulative7dMm: 280.0,
-        recordedAt: new Date().toISOString(),
-        isAnomaly: false,
-      }
+        rainfall1h: 8.5,
+        rainfall24h: 45.2,
+        rainfall72h: 165.4,
+        threshold72h: 150,
+        thresholdExceeded: true,
+        timestamp: new Date().toISOString(),
+        trend: 'rising',
+      },
     ];
   }
 
