@@ -1,0 +1,475 @@
+{
+  "location": {
+    "latitude": 23.7271,
+    "longitude": 92.7176,
+    "elevation_m": 1069.0,
+    "state": "Mizoram",
+    "in_ner": true
+  },
+  "current": {
+    "timestamp": "2026-10-23T19:45",
+    "temperature_c": 20.5,
+    "relative_humidity_percent": 89.0,
+    "precipitation_mm": 0.0,
+    "weather_code": 0,
+    "weather_description": "Clear sky",
+    "data_category": "model_analysis"
+  },
+  "cumulative_rainfall": {
+    "rainfall_24h_mm": 1.1,
+    "rainfall_72h_mm": 3.4,
+    "rainfall_7d_mm": 3.6,
+    "calculation_method": "sum_of_hourly_open_meteo_analysis",
+    "data_category": "historical_model_reanalysis"
+  },
+  "soil_moisture": {
+    "surface_moisture_m3_m3": 0.157,
+    "root_zone_moisture_m3_m3": 0.29,
+    "saturation_status": "wet",
+    "is_model_estimate": true,
+    "measurement_type": "numerical_land_surface_model_estimate",
+    "model_source": "ECMWF Land-Surface Model (IFS / ERA5-Land)",
+    "disclaimer": "Estimated via numerical land-surface simulation, not direct in-situ piezometer observation."
+  },
+  "daily_forecast": [
+    {
+      "date": "2026-10-23",
+      "precipitation_sum_mm": 1.1,
+      "rain_sum_mm": 0.5,
+      "precipitation_hours": 4.0,
+      "weather_code": 53,
+      "weather_description": "Moderate drizzle"
+    },
+    {
+      "date": "2026-10-24",
+      "precipitation_sum_mm": 0.3,
+      "rain_sum_mm": 0.0,
+      "precipitation_hours": 2.0,
+      "weather_code": 51,
+      "weather_description": "Light drizzle"
+    },
+    {
+      "date": "2026-10-25",
+      "precipitation_sum_mm": 0.0,
+      "rain_sum_mm": 0.0,
+      "precipitation_hours": 0.0,
+      "weather_code": 3,
+      "weather_description": "Overcast"
+    },
+    {
+      "date": "2026-10-26",
+      "precipitation_sum_mm": 0.4,
+      "rain_sum_mm": 0.2,
+      "precipitation_hours": 2.0,
+      "weather_code": 51,
+      "weather_description": "Light drizzle"
+    },
+    {
+      "date": "2026-10-27",
+      "precipitation_sum_mm": 4.5,
+      "rain_sum_mm": 1.8,
+      "precipitation_hours": 6.0,
+      "weather_code": 95,
+      "weather_description": "Thunderstorm"
+    },
+    {
+      "date": "2026-10-28",
+      "precipitation_sum_mm": 9.0,
+      "rain_sum_mm": 2.7,
+      "precipitation_hours": 15.0,
+      "weather_code": 95,
+      "weather_description": "Thunderstorm"
+    },
+    {
+      "date": "2026-10-29",
+      "precipitation_sum_mm": 6.6,
+      "rain_sum_mm": 3.9,
+      "precipitation_hours": 12.0,
+      "weather_code": 80,
+      "weather_description": "Slight rain showers"
+    }
+  ],
+  "hourly_series": [
+    {
+      "time": "2026-10-22T19:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-22T20:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-22T21:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-22T22:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-22T23:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T00:00",
+      "precipitation_mm": 0.1,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T01:00",
+      "precipitation_mm": 0.2,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T02:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T03:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T04:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T05:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T06:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T07:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T08:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T09:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T10:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T11:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T12:00",
+      "precipitation_mm": 0.2,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T13:00",
+      "precipitation_mm": 0.6,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T14:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T15:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T16:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T17:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T18:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T19:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": false
+    },
+    {
+      "time": "2026-10-23T20:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-23T21:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-23T22:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-23T23:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T00:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T01:00",
+      "precipitation_mm": 0.1,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T02:00",
+      "precipitation_mm": 0.2,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T03:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T04:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T05:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T06:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T07:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T08:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T09:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T10:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T11:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T12:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T13:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T14:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T15:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T16:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T17:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T18:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T19:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T20:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T21:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T22:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-24T23:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T00:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T01:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T02:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T03:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T04:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T05:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T06:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T07:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T08:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T09:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T10:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T11:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T12:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T13:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T14:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T15:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T16:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T17:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T18:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    },
+    {
+      "time": "2026-10-25T19:00",
+      "precipitation_mm": 0.0,
+      "is_forecast": true
+    }
+  ],
+  "metadata": {
+    "source_name": "Open-Meteo Weather API",
+    "underlying_models": "ECMWF IFS (forecasts) & ERA5-Land (historical reanalysis)",
+    "retrieval_timestamp": "2026-10-23T14:16:34.116075+00:00",
+    "freshness_seconds": 0.0,
+    "cached": false,
+    "data_status": "fresh",
+    "units": {
+      "temperature": "\u00b0C",
+      "precipitation": "mm",
+      "cumulative_rainfall": "mm",
+      "soil_moisture": "m\u00b3/m\u00b3",
+      "relative_humidity": "%",
+      "elevation": "meters"
+    }
+  }
+}
