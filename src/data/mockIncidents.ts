@@ -1,0 +1,298 @@
+import type { IncidentRecord } from '../features/incidents/incident.types';
+
+export const MOCK_INCIDENTS: IncidentRecord[] = [
+  // Shillong Plateau & Southern Escarpment
+  {
+    id: 'inc-ml-01',
+    regionId: 'reg-shillong-escarpment',
+    title: 'Sonapur Tunnel Debris Slide & Flash Flood',
+    date: '2025-06-18T04:30:00Z',
+    coordinates: [92.35, 25.12],
+    severity: 'catastrophic',
+    trigger: 'monsoon_rainfall',
+    casualties: 2,
+    damageDescription: 'Heavy mudslide blocked NH-6 at Sonapur tunnel mouth, severing vehicular connection to Barak Valley and Mizoram for 48 hours.',
+    highwayAffected: 'NH-6 (East Jaintia Hills - Silchar lifeline)',
+    status: 'debris_cleared',
+    verified: true,
+    dataSource: 'NDRF 1st Battalion & Meghalaya Police Telemetry'
+  },
+  {
+    id: 'inc-ml-02',
+    regionId: 'reg-shillong-escarpment',
+    title: 'Umiam Dam Viewpoint Slope Rupture',
+    date: '2025-07-04T14:15:00Z',
+    coordinates: [91.90, 25.66],
+    severity: 'moderate',
+    trigger: 'slope_cut_construction',
+    casualties: 0,
+    damageDescription: 'Cut-slope failure on newly widened lane of GS Road; traffic restricted to single-lane convoy.',
+    highwayAffected: 'NH-40 (Guwahati-Shillong Highway)',
+    status: 'monitoring',
+    verified: true,
+    dataSource: 'Meghalaya PWD (NH Wing)'
+  },
+  {
+    id: 'inc-ml-03',
+    regionId: 'reg-shillong-escarpment',
+    title: 'Cherrapunji Escarpment Rockfall',
+    date: '2025-08-12T19:40:00Z',
+    coordinates: [91.72, 25.28],
+    severity: 'severe',
+    trigger: 'monsoon_rainfall',
+    casualties: 0,
+    damageDescription: 'Limestone boulder detached from cliff face, destroying power line poles and isolating 3 villages.',
+    highwayAffected: 'Sohra-Shella Road',
+    status: 'resolved',
+    verified: true,
+    dataSource: 'GSI Engineering Geology Division'
+  },
+  {
+    id: 'inc-ml-04',
+    regionId: 'reg-shillong-escarpment',
+    title: 'Byrnihat Industrial Belt Mudflow',
+    date: '2026-05-22T08:10:00Z',
+    coordinates: [91.85, 25.75],
+    severity: 'moderate',
+    trigger: 'monsoon_rainfall',
+    casualties: 0,
+    damageDescription: 'Saturated red sandy silt slid into local drainage canal, causing localized inundation of 4 warehouses.',
+    status: 'resolved',
+    verified: true,
+    dataSource: 'District Emergency Operations Centre (DEOC) Ri-Bhoi'
+  },
+
+  // Barail Mountain Range & Haflong Corridor
+  {
+    id: 'inc-br-01',
+    regionId: 'reg-barail-haflong',
+    title: 'Haflong New Railway Station Mud Burial',
+    date: '2025-05-16T11:00:00Z',
+    coordinates: [93.02, 25.18],
+    severity: 'catastrophic',
+    trigger: 'monsoon_rainfall',
+    casualties: 3,
+    damageDescription: 'Extreme hillside collapse completely overwhelmed tracks and buried rolling stock at New Haflong station.',
+    highwayAffected: 'Hill Section Railway Corridor & NH-54E',
+    status: 'debris_cleared',
+    verified: true,
+    dataSource: 'Northeast Frontier Railway (NFR) Disaster Wing'
+  },
+  {
+    id: 'inc-br-02',
+    regionId: 'reg-barail-haflong',
+    title: 'Jatinga Valley Slip Subsidence',
+    date: '2025-07-29T02:45:00Z',
+    coordinates: [93.04, 25.12],
+    severity: 'severe',
+    trigger: 'river_bank_erosion',
+    casualties: 0,
+    damageDescription: 'Roadbed dropped 2.5 meters vertically over a 120-meter stretch following turbulent river toe erosion.',
+    highwayAffected: 'Haflong-Silchar Road',
+    status: 'monitoring',
+    verified: true,
+    dataSource: 'Assam State Disaster Management Authority (ASDMA)'
+  },
+  {
+    id: 'inc-br-03',
+    regionId: 'reg-barail-haflong',
+    title: 'Mahur Railway Cutting Washout',
+    date: '2026-06-11T16:20:00Z',
+    coordinates: [93.12, 25.19],
+    severity: 'severe',
+    trigger: 'monsoon_rainfall',
+    casualties: 0,
+    damageDescription: 'Debris avalanche blocked tunnel portal 7; passenger services halted.',
+    status: 'monitoring',
+    verified: true,
+    dataSource: 'NFR Geotechnical Cell'
+  },
+
+  // Teesta-Rangit Himalayan Basin
+  {
+    id: 'inc-tr-01',
+    regionId: 'reg-teesta-rangit',
+    title: '29th Mile NH-10 Teesta River Surge Slide',
+    date: '2025-07-08T06:00:00Z',
+    coordinates: [88.42, 27.02],
+    severity: 'catastrophic',
+    trigger: 'cloudburst',
+    casualties: 1,
+    damageDescription: 'Teesta river in high spate undercut hill toe, causing 400m of NH-10 carriageway to collapse into the river.',
+    highwayAffected: 'NH-10 (Siliguri - Gangtok lifeline)',
+    status: 'monitoring',
+    verified: true,
+    dataSource: 'BRO Project Swastik & Sikkim SDMA'
+  },
+  {
+    id: 'inc-tr-02',
+    regionId: 'reg-teesta-rangit',
+    title: 'Chungthang Valley GLOF Residual Slope Slump',
+    date: '2025-09-14T21:10:00Z',
+    coordinates: [88.64, 27.60],
+    severity: 'catastrophic',
+    trigger: 'cloudburst',
+    casualties: 0,
+    damageDescription: 'Secondary slope failure on unconsolidated morainic deposits following post-monsoon intense shower.',
+    highwayAffected: 'North Sikkim Highway',
+    status: 'debris_cleared',
+    verified: true,
+    dataSource: 'Wadia Institute & Geological Survey of India'
+  },
+  {
+    id: 'inc-tr-03',
+    regionId: 'reg-teesta-rangit',
+    title: 'Singtam Hillside Fissure Creep',
+    date: '2026-04-19T13:40:00Z',
+    coordinates: [88.50, 27.23],
+    severity: 'moderate',
+    trigger: 'monsoon_rainfall',
+    casualties: 0,
+    damageDescription: 'Active surface fissures widened by 14mm in 24 hours, prompting precautionary evacuation of 12 households.',
+    status: 'monitoring',
+    verified: true,
+    dataSource: 'District Collectorate Gangtok'
+  },
+
+  // Kameng & Subansiri Foothills Corridor
+  {
+    id: 'inc-ks-01',
+    regionId: 'reg-kameng-subansiri',
+    title: 'Bhalukpong-Tenga Gorge Slide',
+    date: '2025-06-25T17:15:00Z',
+    coordinates: [92.56, 27.15],
+    severity: 'severe',
+    trigger: 'monsoon_rainfall',
+    casualties: 0,
+    damageDescription: 'Overhanging phyllite mass sheared away, burying military transport vehicle. No occupants harmed.',
+    highwayAffected: 'NH-13 (Trans-Arunachal Highway)',
+    status: 'debris_cleared',
+    verified: true,
+    dataSource: 'BRO Project Vartak Command'
+  },
+  {
+    id: 'inc-ks-02',
+    regionId: 'reg-kameng-subansiri',
+    title: 'Lower Subansiri Right Bank Escarpment Slump',
+    date: '2025-08-30T10:05:00Z',
+    coordinates: [93.72, 27.55],
+    severity: 'severe',
+    trigger: 'river_bank_erosion',
+    casualties: 0,
+    damageDescription: 'Subansiri river diversion channel bank slipped, temporarily choking diversion tunnel intake.',
+    status: 'resolved',
+    verified: true,
+    dataSource: 'NHPC Hydrological Observation Cell'
+  },
+
+  // Naga Hills & Kohima-Dimapur Pass
+  {
+    id: 'inc-nh-01',
+    regionId: 'reg-naga-hills-nh2',
+    title: 'Pagla Pahar Sinking Zone Reactivation',
+    date: '2025-07-19T18:00:00Z',
+    coordinates: [93.75, 25.82],
+    severity: 'severe',
+    trigger: 'monsoon_rainfall',
+    casualties: 0,
+    damageDescription: 'Recurring chronic slide zone on NH-2 gave way during 180mm downpour; 400 cargo trucks stranded.',
+    highwayAffected: 'NH-2 (Dimapur - Kohima)',
+    status: 'monitoring',
+    verified: true,
+    dataSource: 'Nagaland NSDMA & NHIDCL'
+  },
+  {
+    id: 'inc-nh-02',
+    regionId: 'reg-naga-hills-nh2',
+    title: 'Phesama Bypass Subsidence Slip',
+    date: '2026-06-02T05:30:00Z',
+    coordinates: [94.11, 25.62],
+    severity: 'moderate',
+    trigger: 'monsoon_rainfall',
+    casualties: 0,
+    damageDescription: 'Retaining wall breached under hydrostatic pore water pressure; 60m road depression.',
+    highwayAffected: 'NH-2 Kohima South bypass',
+    status: 'debris_cleared',
+    verified: true,
+    dataSource: 'Kohima Municipal Council Geotech Cell'
+  },
+
+  // Mizo Ridge & Tuirial River Basin
+  {
+    id: 'inc-mz-01',
+    regionId: 'reg-mizo-hills-tuirial',
+    title: 'Kolasib-Vairengte Lifeline Slip',
+    date: '2025-06-09T03:45:00Z',
+    coordinates: [92.68, 24.23],
+    severity: 'severe',
+    trigger: 'monsoon_rainfall',
+    casualties: 0,
+    damageDescription: 'Shale-sandstone transition bedding plane rupture slid onto NH-306; LPG tankers delayed 36 hours.',
+    highwayAffected: 'NH-306 (Silchar - Aizawl vital link)',
+    status: 'debris_cleared',
+    verified: true,
+    dataSource: 'Mizoram PWD & DM&R Department'
+  },
+  {
+    id: 'inc-mz-02',
+    regionId: 'reg-mizo-hills-tuirial',
+    title: 'Ramhlun North Settlement Slope Failure',
+    date: '2025-08-01T22:15:00Z',
+    coordinates: [92.73, 23.75],
+    severity: 'catastrophic',
+    trigger: 'monsoon_rainfall',
+    casualties: 4,
+    damageDescription: 'Unregulated cut slope beneath residential terrace liquefied; two buildings collapsed into ravines.',
+    status: 'resolved',
+    verified: true,
+    dataSource: 'Aizawl Disaster Management Authority'
+  },
+
+  // Siang Canyon & Dibang Escarpment
+  {
+    id: 'inc-sd-01',
+    regionId: 'reg-siang-dibang',
+    title: 'Yingkiong-Tuting Road Blockade',
+    date: '2025-07-22T09:30:00Z',
+    coordinates: [94.98, 28.62],
+    severity: 'catastrophic',
+    trigger: 'cloudburst',
+    casualties: 1,
+    damageDescription: 'Massive debris fan blocked Siang river tributary, creating 20-meter-deep temporary natural dam.',
+    highwayAffected: 'Yingkiong - Tuting Border Road',
+    status: 'monitoring',
+    verified: true,
+    dataSource: 'Upper Siang District Administration & ITBP Post'
+  },
+  {
+    id: 'inc-sd-02',
+    regionId: 'reg-siang-dibang',
+    title: 'Hunli-Anini Mountain Ridge Slide',
+    date: '2026-05-18T15:20:00Z',
+    coordinates: [95.78, 28.45],
+    severity: 'severe',
+    trigger: 'monsoon_rainfall',
+    casualties: 0,
+    damageDescription: 'Rockslide destroyed steel bailey bridge at km 48; air-dropping required for essentials.',
+    highwayAffected: 'Roing - Anini Highway',
+    status: 'debris_cleared',
+    verified: true,
+    dataSource: 'BRO Project Udayak'
+  },
+
+  // Surma-Barak Piedmont & Jaintia Slopes
+  {
+    id: 'inc-sb-01',
+    regionId: 'reg-surma-barak-jaintia',
+    title: 'Badarpur Ghat Riverine Embankment Slide',
+    date: '2025-06-14T12:00:00Z',
+    coordinates: [92.58, 24.89],
+    severity: 'moderate',
+    trigger: 'river_bank_erosion',
+    casualties: 0,
+    damageDescription: 'Barak river high current carved deep toe into alluvial clay silt; 50m embankment collapsed into river.',
+    status: 'resolved',
+    verified: true,
+    dataSource: 'Water Resources Dept Assam & Cachar DC'
+  }
+];
