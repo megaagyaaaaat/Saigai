@@ -1,0 +1,183 @@
+{
+  "title": "NER-LEWS Historical Landslide Inventory Data Summary",
+  "timestamp_generated": "2026-10-23T14:59:46.456278+00:00",
+  "total_records_ingested": 453,
+  "total_valid_located_events": 411,
+  "total_unlocated_quarantined_events": 42,
+  "duplicate_events_flagged": 4,
+  "spatial_coverage_states": [
+    "Assam",
+    "Arunachal Pradesh",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Sikkim",
+    "Tripura"
+  ],
+  "date_coverage_range": [
+    "2007-04-11",
+    "2024-08-21"
+  ],
+  "data_sources": [
+    {
+      "source": "NASA Global Landslide Catalog (GLC) / COOLR",
+      "authority": "NASA Goddard Space Flight Center",
+      "license": "Public Domain (Creative Commons Zero / Open Data)",
+      "url": "https://data.nasa.gov/dataset/Global-Landslide-Catalog-Export",
+      "temporal_range": "2007 - 2016"
+    },
+    {
+      "source": "GSI Bhusanket & Bhukosh",
+      "authority": "Geological Survey of India (Ministry of Mines)",
+      "license": "National Data Sharing and Accessibility Policy (NDSAP) - Open Government Data",
+      "url": "https://bhukosh.gsi.gov.in/",
+      "temporal_range": "2015 - 2024"
+    },
+    {
+      "source": "North Eastern Regional Node for Disaster Risk Reduction (NER-DRR)",
+      "authority": "NESAC (Department of Space) & ASDMA",
+      "license": "Government Open Scientific Bulletin",
+      "url": "https://nerdrr.gov.in/",
+      "temporal_range": "2018 - 2025"
+    },
+    {
+      "source": "Copernicus DEM GLO-30",
+      "authority": "European Space Agency (ESA)",
+      "license": "Copernicus Open Access / Public Free Tier",
+      "url": "https://spacedata.copernicus.eu/",
+      "resolution": "30 meters"
+    }
+  ],
+  "state_statistics": [
+    {
+      "state": "Assam",
+      "total_events": 84,
+      "events_with_coordinates": 84,
+      "unlocated_events": 0,
+      "fatalities_total": 103,
+      "catastrophic_count": 9,
+      "severe_count": 27,
+      "moderate_count": 41,
+      "minor_count": 7,
+      "earliest_date": "2007-07-19",
+      "latest_date": "2022-05-16",
+      "peak_monsoon_month": "June"
+    },
+    {
+      "state": "Arunachal Pradesh",
+      "total_events": 46,
+      "events_with_coordinates": 46,
+      "unlocated_events": 0,
+      "fatalities_total": 117,
+      "catastrophic_count": 9,
+      "severe_count": 12,
+      "moderate_count": 24,
+      "minor_count": 1,
+      "earliest_date": "2008-06-14",
+      "latest_date": "2024-06-25",
+      "peak_monsoon_month": "June"
+    },
+    {
+      "state": "Manipur",
+      "total_events": 58,
+      "events_with_coordinates": 58,
+      "unlocated_events": 0,
+      "fatalities_total": 70,
+      "catastrophic_count": 3,
+      "severe_count": 4,
+      "moderate_count": 47,
+      "minor_count": 4,
+      "earliest_date": "2007-08-26",
+      "latest_date": "2022-06-30",
+      "peak_monsoon_month": "August"
+    },
+    {
+      "state": "Meghalaya",
+      "total_events": 30,
+      "events_with_coordinates": 30,
+      "unlocated_events": 0,
+      "fatalities_total": 42,
+      "catastrophic_count": 4,
+      "severe_count": 10,
+      "moderate_count": 15,
+      "minor_count": 1,
+      "earliest_date": "2007-07-26",
+      "latest_date": "2023-06-16",
+      "peak_monsoon_month": "June"
+    },
+    {
+      "state": "Mizoram",
+      "total_events": 28,
+      "events_with_coordinates": 28,
+      "unlocated_events": 0,
+      "fatalities_total": 56,
+      "catastrophic_count": 2,
+      "severe_count": 8,
+      "moderate_count": 18,
+      "minor_count": 0,
+      "earliest_date": "2007-07-30",
+      "latest_date": "2024-05-28",
+      "peak_monsoon_month": "September"
+    },
+    {
+      "state": "Nagaland",
+      "total_events": 79,
+      "events_with_coordinates": 79,
+      "unlocated_events": 0,
+      "fatalities_total": 7,
+      "catastrophic_count": 0,
+      "severe_count": 6,
+      "moderate_count": 73,
+      "minor_count": 0,
+      "earliest_date": "2007-08-28",
+      "latest_date": "2024-07-02",
+      "peak_monsoon_month": "August"
+    },
+    {
+      "state": "Sikkim",
+      "total_events": 82,
+      "events_with_coordinates": 82,
+      "unlocated_events": 0,
+      "fatalities_total": 155,
+      "catastrophic_count": 10,
+      "severe_count": 15,
+      "moderate_count": 50,
+      "minor_count": 7,
+      "earliest_date": "2007-04-11",
+      "latest_date": "2023-10-04",
+      "peak_monsoon_month": "August"
+    },
+    {
+      "state": "Tripura",
+      "total_events": 4,
+      "events_with_coordinates": 4,
+      "unlocated_events": 0,
+      "fatalities_total": 16,
+      "catastrophic_count": 0,
+      "severe_count": 3,
+      "moderate_count": 1,
+      "minor_count": 0,
+      "earliest_date": "2010-06-03",
+      "latest_date": "2024-08-21",
+      "peak_monsoon_month": "August"
+    }
+  ],
+  "region_statistics": {
+    "reg-ner-broad-hills": 162,
+    "reg-teesta-rangit": 82,
+    "reg-naga-hills-nh2": 62,
+    "reg-barail-haflong": 31,
+    "reg-mizo-hills-tuirial": 27,
+    "reg-kameng-subansiri": 18,
+    "reg-shillong-escarpment": 12,
+    "reg-siang-dibang": 11,
+    "reg-surma-barak-jaintia": 6
+  },
+  "known_limitations": [
+    "Reporting Bias: Historical records disproportionately capture events near highways, rail lines, and populated towns.",
+    "Monsoon Accessibility: Uninhabited steep high-altitude ridges in Upper Arunachal and northern Sikkim lack ground reporting.",
+    "Temporal Resolution: Pre-2007 events are primarily paper archive records with uncertain coordinate accuracy (>10 km).",
+    "Absence of Recorded Landslide: Lack of an event in a tract does NOT imply zero risk; geomechanical susceptibility remains high on all steep slopes."
+  ]
+}

@@ -24,3 +24,21 @@ pnpm-debug.log*
 # OS metadata
 .DS_Store
 Thumbs.db
+
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*.class
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+env/
+venv/
+
+# Large raw datasets
+data/raw/
+*.tif
+*.tiff
+*.hgt
+data/processed/.terrain_cache.json
