@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { RegionDetailData } from '../../hooks/useRegionSelection';
 import { Badge } from '../ui/Badge';
 import { IncidentTimeline } from './IncidentTimeline';
@@ -30,61 +30,15 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
   const [minLng0, minLat0, maxLng0, maxLat0] = region.bounds || [91.0, 25.0, 93.0, 26.0];
   const recentRain = useRecentRainfall((minLat0 + maxLat0) / 2, (minLng0 + maxLng0) / 2);
 
-  const [liveWeather, setLiveWeather] = useState<{
-    tempC?: number;
-    condition?: string;
-    humidity?: number;
-    rainfall24h?: number;
-    windSpeed?: number;
-    loading: boolean;
-    isLive: boolean;
-  }>({ loading: true, isLive: false });
-
-  // Connect to live backend weather API
-  useEffect(() => {
-    let isMounted = true;
-    setLiveWeather((prev) => ({ ...prev, loading: true }));
-
-    const [minLng, minLat, maxLng, maxLat] = region.bounds || [91.0, 25.0, 93.0, 26.0];
-    const lat = (minLat + maxLat) / 2;
-    const lon = (minLng + maxLng) / 2;
-
-    fetch(`/api/weather?lat=${lat.toFixed(2)}&lon=${lon.toFixed(2)}`)
-      .then((r) => {
-        if (!r.ok) throw new Error(`Weather ${r.status}`);
-        return r.json();
-      })
-      .then((payload) => {
-        if (isMounted) {
-          setLiveWeather({
-            tempC: payload?.current?.temperature_c,
-            condition: payload?.current?.weather_description || payload?.current?.condition || 'Scattered Monsoon Clouds',
-            humidity: payload?.current?.relative_humidity_percent,
-            rainfall24h: payload?.cumulative_rainfall?.past_24h_mm,
-            windSpeed: payload?.current?.wind_speed_kmh,
-            loading: false,
-            isLive: true,
-          });
-        }
-      })
-      .catch(() => {
-        if (isMounted) {
-          setLiveWeather({
-            tempC: 22.5,
-            condition: 'Monsoon Cloud Cover',
-            humidity: 84,
-            rainfall24h: Math.round(region.avgRainfall72h / 3),
-            windSpeed: 14.2,
-            loading: false,
-            isLive: false,
-          });
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [region.id, region.bounds]);
+  // Weather comes from the same single (cached) Open-Meteo request as the rainfall history
+  const liveWeather = {
+    tempC: recentRain.current?.tempC,
+    condition: recentRain.current?.condition ?? (recentRain.loading ? 'Loading…' : 'Unavailable (offline)'),
+    humidity: recentRain.current?.humidity,
+    rainfall24h: recentRain.current?.rain24hMm,
+    windSpeed: recentRain.current?.windKmh,
+    isLive: recentRain.live,
+  };
 
   return (
     <div className="w-full flex-1 flex flex-col bg-transparent select-none overflow-hidden h-full">
@@ -99,7 +53,7 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
             {liveWeather.isLive && (
               <span className="inline-flex items-center gap-1 text-[10px] font-mono text-ner-emerald bg-ner-emerald/10 border border-ner-emerald/30 px-1.5 py-0.2 rounded">
                 <span className="w-1.5 h-1.5 rounded-full bg-ner-emerald animate-pulse" />
-                BACKEND LIVE
+                LIVE DATA
               </span>
             )}
           </div>
@@ -274,7 +228,7 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
                     Temp
                   </span>
                   <p className="font-mono text-base font-bold text-ner-text mt-0.5">
-                    {liveWeather.tempC !== undefined ? `${liveWeather.tempC}°C` : '22.5°C'}
+                    {liveWeather.tempC !== undefined ? `${liveWeather.tempC}°C` : '—'}
                   </p>
                 </div>
 
@@ -284,7 +238,7 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
                     Humidity
                   </span>
                   <p className="font-mono text-base font-bold text-ner-text mt-0.5">
-                    {liveWeather.humidity !== undefined ? `${liveWeather.humidity}%` : '84%'}
+                    {liveWeather.humidity !== undefined ? `${liveWeather.humidity}%` : '—'}
                   </p>
                 </div>
 
@@ -294,7 +248,7 @@ export const RegionDetailsPanel: React.FC<RegionDetailsPanelProps> = ({ data, on
                     24h Precip
                   </span>
                   <p className="font-mono text-base font-bold text-ner-text mt-0.5">
-                    {liveWeather.rainfall24h !== undefined ? `${liveWeather.rainfall24h} mm` : '32.0 mm'}
+                    {liveWeather.rainfall24h !== undefined ? `${liveWeather.rainfall24h} mm` : '—'}
                   </p>
                 </div>
               </div>

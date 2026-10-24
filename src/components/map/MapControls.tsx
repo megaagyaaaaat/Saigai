@@ -9,7 +9,6 @@ import {
   Layers, 
   Eye, 
   EyeOff, 
-  Globe2, 
   Activity, 
   Radio,
   Moon,
@@ -232,26 +231,6 @@ export const MapControls: React.FC<MapControlsProps> = ({
 
         {isOverlaysOpen && (
           <>
-
-        {/* Satellite Imagery Basemap Toggle */}
-        <button
-          onClick={() => onToggleLayer('showSatellite')}
-          className={`flex items-center justify-between px-2 py-1.5 rounded-lg transition-colors ${
-            layers.showSatellite
-              ? 'bg-ner-surface text-ner-cyan border border-ner-cyan/30'
-              : 'text-ner-muted hover:bg-ner-surface/60'
-          }`}
-        >
-          <span className="flex items-center gap-2">
-            <Globe2 className="w-3.5 h-3.5" />
-            <span>Satellite Basemap</span>
-          </span>
-          {layers.showSatellite ? (
-            <Eye className="w-3 h-3 text-ner-cyan" />
-          ) : (
-            <EyeOff className="w-3 h-3 text-ner-muted" />
-          )}
-        </button>
 
         {/* Predefined Regions */}
         <button

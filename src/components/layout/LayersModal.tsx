@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Layers, Globe2, Check } from 'lucide-react';
+import { X, Layers, Check } from 'lucide-react';
 import type { MapLayerVisibility } from '../map/MapControls';
 
 interface LayersModalProps {
@@ -36,34 +36,6 @@ export const LayersModal: React.FC<LayersModalProps> = ({
 
         {/* Layer Toggles */}
         <div className="p-4 space-y-3 text-xs">
-          {/* Base Layer */}
-          <div className="p-3 rounded-xl bg-ner-surface/70 border border-ner-border space-y-2">
-            <span className="text-[10px] font-mono text-ner-muted uppercase">Base Raster Tile Provider</span>
-            <div className="flex gap-2">
-              <button
-                onClick={() => onToggleLayer('showSatellite')}
-                className={`flex-1 p-2 rounded-lg border font-mono text-xs flex items-center justify-center gap-2 transition-all ${
-                  layers.showSatellite
-                    ? 'bg-ner-cyan/20 border-ner-cyan text-ner-cyan font-bold shadow-glow-cyan'
-                    : 'bg-ner-panel border-ner-border text-ner-muted hover:text-ner-text'
-                }`}
-              >
-                <Globe2 className="w-3.5 h-3.5" />
-                <span>Satellite Imagery</span>
-              </button>
-              <button
-                onClick={() => onToggleLayer('showSatellite')}
-                className={`flex-1 p-2 rounded-lg border font-mono text-xs flex items-center justify-center gap-2 transition-all ${
-                  !layers.showSatellite
-                    ? 'bg-ner-blue/20 border-ner-blue text-ner-blue font-bold shadow-glow-blue'
-                    : 'bg-ner-panel border-ner-border text-ner-muted hover:text-ner-text'
-                }`}
-              >
-                <span>Dark Canvas</span>
-              </button>
-            </div>
-          </div>
-
           {/* Regional Vector Layers */}
           <div className="space-y-2">
             <span className="text-[10px] font-mono text-ner-muted uppercase">Geographic Vector Overlays</span>

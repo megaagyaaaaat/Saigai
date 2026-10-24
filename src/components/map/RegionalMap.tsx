@@ -19,7 +19,7 @@ const NE_DEFAULT_ZOOM = 5.6;
 const INTRO_CENTER: [number, number] = [89.5, 24.5];
 const INTRO_ZOOM = 4.2;
 const NE_TILT = { pitch: 48, bearing: -12 };
-const INTRO_MS = 7000;
+const INTRO_MS = 11000;
 const MAX_PIXEL_RATIO = 1.5;
 // How far the closing shot pulls back (zoom levels)
 const OUTRO_ZOOM_OUT = 3.2;
